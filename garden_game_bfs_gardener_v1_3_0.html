@@ -1,0 +1,2591 @@
+<!-- V1 gardengame -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python-Based Garden Simulator</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #1e261c;
+    color: #f3f4f6;
+}
+
+.code-font {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.glass-panel {
+    background: rgba(40, 54, 35, .45);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(120, 143, 114, .2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .3);
+}
+</style>
+</head>
+
+<body class="min-h-screen p-4 flex flex-col overflow-x-hidden">
+
+<header class="w-full max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 pb-2 border-b border-[#43533c]/40">
+
+    <div>
+        <div class="flex items-center gap-2">
+            <h1 class="text-2xl font-extrabold tracking-tight text-emerald-100">
+                Python-Based Garden Simulator
+            </h1>
+
+            <span
+                id="version-badge"
+                class="text-[10px] font-bold uppercase tracking-widest text-emerald-400/90 bg-emerald-950/50 border border-emerald-800/60 px-2 py-0.5 rounded-full">
+            </span>
+        </div>
+
+        <p class="text-xs text-emerald-300/80 font-medium">
+            SDG 2, 13, 15
+        </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+
+        <div class="glass-panel px-4 py-2 rounded-xl flex flex-col items-end">
+            <span class="text-[10px] text-emerald-400 uppercase tracking-widest font-bold">
+                DAY
+            </span>
+            <span class="text-lg font-extrabold text-white" id="day-counter">
+                1
+            </span>
+        </div>
+
+        <div class="glass-panel px-4 py-2 rounded-xl flex flex-col items-end">
+            <span class="text-[10px] text-emerald-400 uppercase tracking-widest font-bold">
+                SCORE
+            </span>
+            <span class="text-lg font-extrabold text-emerald-300" id="stewardship-counter">
+                0%
+            </span>
+        </div>
+
+    </div>
+</header>
+
+
+<main class="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-4 flex-grow">
+
+    <!-- RESOURCE PANEL -->
+    <section class="lg:col-span-3 glass-panel rounded-2xl p-4">
+
+        <h2 class="text-base font-bold text-emerald-200 border-b border-[#43533c]/30 pb-2 mb-4 flex items-center gap-2">
+            <i data-lucide="database" class="w-4 h-4 text-emerald-400"></i>
+            Resource Storage
+        </h2>
+
+        <div class="space-y-4">
+
+            <!-- Water -->
+            <div>
+                <div class="flex justify-between text-xs font-semibold">
+                    <span class="text-blue-300">Water Reserves</span>
+                    <span id="water-text">0 / 200 L</span>
+                </div>
+
+                <div class="w-full bg-[#1b2219] h-2.5 rounded-full overflow-hidden">
+                    <div
+                        id="water-bar"
+                        class="bg-gradient-to-r from-blue-500 to-cyan-400 h-full rounded-full"
+                        style="width:0%">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seeds -->
+            <div>
+                <div class="flex justify-between text-xs font-semibold">
+                    <span class="text-emerald-300">Seed Inventory</span>
+                    <span id="seeds-text">0 / 100</span>
+                </div>
+
+                <div class="w-full bg-[#1b2219] h-2.5 rounded-full overflow-hidden">
+                    <div
+                        id="seeds-bar"
+                        class="bg-gradient-to-r from-emerald-500 to-lime-400 h-full rounded-full"
+                        style="width:0%">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Energy -->
+            <div>
+                <div class="flex justify-between text-xs font-semibold">
+                    <span class="text-amber-300">Solar Energy</span>
+                    <span id="energy-text">0 / 120 Wh</span>
+                </div>
+
+                <div class="w-full bg-[#1b2219] h-2.5 rounded-full overflow-hidden">
+                    <div
+                        id="energy-bar"
+                        class="bg-gradient-to-r from-amber-500 to-yellow-300 h-full rounded-full"
+                        style="width:0%">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hope -->
+            <div>
+                <div class="flex justify-between text-xs font-semibold">
+                    <span class="text-rose-300">Community Hope</span>
+                    <span id="hope-text">0 / 100</span>
+                </div>
+
+                <div class="w-full bg-[#1b2219] h-2.5 rounded-full overflow-hidden">
+                    <div
+                        id="hope-bar"
+                        class="bg-gradient-to-r from-rose-500 to-pink-400 h-full rounded-full"
+                        style="width:0%">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coins -->
+            <div>
+                <div class="flex justify-between text-xs font-semibold">
+                    <span class="text-yellow-200">Coins / Dues</span>
+                    <span id="coins-text" class="text-yellow-200">
+                        0 Coins
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- CENTER -->
+    <section class="lg:col-span-6 flex flex-col gap-4">
+
+        <!-- Tabs -->
+        <div class="flex bg-[#192218] p-1.5 rounded-xl border border-emerald-800/40 w-fit">
+
+            <button
+                id="tab-game"
+                onclick="switchTab('game')"
+                class="px-4 py-1.5 rounded-lg text-xs font-bold bg-[#283623] text-emerald-100">
+                Interactive Sanctuary
+            </button>
+
+            <button
+                id="tab-code"
+                onclick="switchTab('code')"
+                class="px-4 py-1.5 rounded-lg text-xs font-bold text-emerald-400/80 hover:text-emerald-100">
+                Student Code Editor
+            </button>
+
+        </div>
+
+
+        <!-- GAME VIEW -->
+        <div
+            id="view-game"
+            class="glass-panel rounded-2xl p-6 min-h-[380px]">
+
+            <div class="flex items-center justify-between mb-4">
+
+                <div>
+                    <h2 class="text-lg font-bold text-white">
+                        Sanctuary Garden Grid
+                    </h2>
+
+                    <p class="text-xs text-emerald-300" id="garden-instruction">
+                        Click empty soil to plant. Click a plant to select it, then water or harvest.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-2">
+
+                    <span class="text-xs text-emerald-300">
+                        Seed Bag:
+                    </span>
+
+                    <select
+                        id="crop-selector"
+                        class="bg-[#1b2219] border border-emerald-700 text-emerald-100 text-sm rounded-xl px-3 py-2">
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+                <button id="water-button" class="bg-blue-700 hover:bg-blue-600 disabled:opacity-40 disabled:cursor-not-allowed px-3 py-2 rounded-xl text-xs font-bold text-white">
+                    💧 Water Selected
+                </button>
+                <button id="harvest-button" class="bg-amber-700 hover:bg-amber-600 disabled:opacity-40 disabled:cursor-not-allowed px-3 py-2 rounded-xl text-xs font-bold text-white">
+                    🌾 Harvest Selected
+                </button>
+                <button id="next-day-button" class="bg-emerald-600 hover:bg-emerald-500 px-3 py-2 rounded-xl text-xs font-bold text-white">
+                    ☀️ Next Day
+                </button>
+                <button id="buy-seeds-button" class="bg-[#2a3825] hover:bg-[#34462e] border border-emerald-800 px-3 py-2 rounded-xl text-xs font-bold text-emerald-200">
+                    🛒 Buy 5 Seeds · 10 Coins
+                </button>
+                <button id="save-game-button" class="bg-[#2a3825] hover:bg-[#34462e] border border-emerald-800 px-3 py-2 rounded-xl text-xs font-bold text-emerald-200">
+                    💾 Save
+                </button>
+                <button id="reset-game-button" class="bg-[#2a3825] hover:bg-[#34462e] border border-emerald-800 px-3 py-2 rounded-xl text-xs font-bold text-emerald-200">
+                    ↻ Reset
+                </button>
+            </div>
+
+            <div id="selected-plot" class="mb-4 hidden bg-[#162016] border border-emerald-900 rounded-xl px-3 py-2 text-xs text-emerald-200"></div>
+
+            <div
+                id="garden-grid"
+                class="grid grid-cols-5 gap-3">
+            </div>
+
+        </div>
+
+
+        <!-- CODE VIEW -->
+        <div
+            id="view-code"
+            class="glass-panel rounded-2xl p-6 flex flex-col flex-grow hidden">
+
+            <h2 class="font-bold mb-3 flex items-center gap-2">
+
+                <i
+                    data-lucide="code"
+                    class="w-5 h-5 text-emerald-400">
+                </i>
+
+                Student Code Editor (Lab)
+
+            </h2>
+
+
+            <!-- Topic -->
+            <select
+                id="topic-selector"
+                onchange="loadTopic()"
+                class="w-full bg-[#1b2219] border border-emerald-700 rounded-xl p-3 mb-4 text-sm">
+            </select>
+
+
+            <!-- Code Editor -->
+            <textarea
+                id="code-editor"
+                class="flex-1 min-h-[260px] bg-[#0a0f0a] border border-emerald-800 rounded-xl p-4 code-font text-sm font-medium leading-relaxed text-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-700"
+                spellcheck="false">
+            </textarea>
+
+
+            <!-- Buttons -->
+            <div class="flex gap-2 mt-4">
+
+                <button
+                    id="run-button"
+                    onclick="runPythonCode()"
+                    class="flex-1 bg-emerald-600 hover:bg-emerald-500 py-3 rounded-xl font-bold text-white flex items-center justify-center gap-2">
+
+                    <i
+                        data-lucide="play"
+                        class="w-4 h-4">
+                    </i>
+
+                    Run Python Code
+                </button>
+
+
+                <button
+                    id="reset-code"
+                    onclick="loadTopic()"
+                    class="px-5 bg-[#2a3825] hover:bg-[#34462e] py-3 rounded-xl font-bold text-emerald-200">
+
+                    Reset
+                </button>
+
+
+                <button
+                    id="restart-python"
+                    class="px-5 bg-[#2a3825] hover:bg-[#34462e] py-3 rounded-xl font-bold text-emerald-200">
+
+                    Restart Python
+                </button>
+
+            </div>
+
+
+            <!-- Console -->
+            <div
+                id="output-console"
+                class="mt-4 bg-black/70 border border-emerald-900 rounded-xl p-4 text-xs max-h-48 overflow-auto font-mono whitespace-pre-wrap">
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RIGHT PANEL -->
+    <section class="lg:col-span-3 flex flex-col gap-4">
+
+        <!-- Garden Status -->
+        <div class="glass-panel rounded-2xl p-4">
+            <h3 class="font-bold text-emerald-400 mb-3 flex items-center gap-2">
+                <i data-lucide="sprout" class="w-4 h-4"></i>
+                Garden Status
+            </h3>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+                <div class="bg-[#1b2219] rounded-xl p-2 border border-emerald-900/60">
+                    <div class="text-emerald-400">Growing</div>
+                    <div id="growing-count" class="text-lg font-extrabold text-white">0</div>
+                </div>
+                <div class="bg-[#1b2219] rounded-xl p-2 border border-emerald-900/60">
+                    <div class="text-emerald-400">Mature</div>
+                    <div id="mature-count" class="text-lg font-extrabold text-white">0</div>
+                </div>
+                <div class="bg-[#1b2219] rounded-xl p-2 border border-emerald-900/60">
+                    <div class="text-emerald-400">Harvested</div>
+                    <div id="harvest-count" class="text-lg font-extrabold text-white">0</div>
+                </div>
+                <div class="bg-[#1b2219] rounded-xl p-2 border border-emerald-900/60">
+                    <div class="text-emerald-400">Goal</div>
+                    <div id="goal-status" class="text-lg font-extrabold text-emerald-300">Grow</div>
+                </div>
+            </div>
+            <p id="game-message" class="mt-3 text-xs leading-relaxed text-emerald-200/80">Plant, water, advance the day, and harvest mature crops.</p>
+        </div>
+
+        <!-- GARDENER / BFS -->
+        <div class="glass-panel rounded-2xl p-4">
+            <h3 class="font-bold text-emerald-400 mb-3 flex items-center gap-2">
+                <i data-lucide="user-round" class="w-4 h-4"></i>
+                Garden Helper (BFS + Pest Control)
+            </h3>
+
+            <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+                <div class="bg-[#1b2219] rounded-xl p-2 border border-emerald-900/60">
+                    <div class="text-emerald-400">Position</div>
+                    <div id="gardener-position" class="font-extrabold text-white mt-1">Plot 13</div>
+                </div>
+                <div class="bg-[#1b2219] rounded-xl p-2 border border-emerald-900/60">
+                    <div class="text-emerald-400">Task</div>
+                    <div id="gardener-task" class="font-extrabold text-white mt-1">Idle</div>
+                </div>
+                <div class="bg-[#1b2219] rounded-xl p-2 border border-emerald-900/60">
+                    <div class="text-emerald-400">Pesticide</div>
+                    <div id="gardener-pesticide" class="font-extrabold text-amber-300 mt-1">Equipped</div>
+                </div>
+                <div class="bg-[#1b2219] rounded-xl p-2 border border-emerald-900/60">
+                    <div class="text-emerald-400">Pests</div>
+                    <div id="garden-pests" class="font-extrabold text-rose-300 mt-1">0</div>
+                </div>
+            </div>
+
+            <div class="text-[10px] text-emerald-300/70 mb-2">
+                The gardener can plant, water, and harvest while you continue playing normally. BFS navigation starts from the gardener's current position. Pest threats occur naturally and are handled automatically by the gardener.
+            </div>
+
+            <label class="text-[10px] text-emerald-300 font-semibold">Gardener Crop</label>
+            <select id="gardener-crop-selector" class="w-full mt-1 bg-[#1b2219] border border-emerald-700 text-emerald-100 text-xs rounded-xl px-3 py-2">
+            </select>
+
+            <div class="flex flex-wrap gap-2 mt-3">
+                <button id="gardener-toggle" class="flex-1 bg-emerald-700 hover:bg-emerald-600 px-3 py-2 rounded-xl text-xs font-bold text-white">
+                    ▶ Start Gardener
+                </button>
+                <button id="gardener-path" class="flex-1 bg-[#2a3825] hover:bg-[#34462e] border border-emerald-800 px-3 py-2 rounded-xl text-xs font-bold text-emerald-200">
+                    🧭 Path to Selected
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 mt-2">
+                <button id="gardener-mature" class="bg-[#2a3825] hover:bg-[#34462e] border border-emerald-800 px-3 py-2 rounded-xl text-[10px] font-bold text-emerald-200">
+                    🔎 Nearest Mature
+                </button>
+                <button id="gardener-irrigate" class="bg-[#2a3825] hover:bg-[#34462e] border border-emerald-800 px-3 py-2 rounded-xl text-[10px] font-bold text-blue-200">
+                    💧 Irrigate Area
+                </button>
+                <div class="col-span-2 bg-[#1b2219] border border-rose-900/60 px-3 py-2 rounded-xl text-[10px] font-semibold text-rose-200/80">
+                    🦠 Pest threats occur naturally at randomized intervals. The gardener detects them immediately and uses pesticide before returning to normal care.
+                </div>
+            </div>
+
+            <div id="gardener-target" class="mt-3 text-[10px] text-emerald-200/80 bg-[#162016] border border-emerald-900 rounded-xl px-3 py-2">
+                Target: None
+            </div>
+        </div>
+
+
+        <!-- Queue -->
+        <div class="glass-panel rounded-2xl p-4">
+
+            <h3 class="font-bold text-emerald-400 mb-3 flex items-center gap-2">
+
+                <i
+                    data-lucide="cloud-lightning"
+                    class="w-4 h-4">
+                </i>
+
+                Climate Queue (FIFO)
+
+            </h3>
+
+            <div
+                id="climate-queue"
+                class="space-y-3 text-sm">
+            </div>
+
+        </div>
+
+
+        <!-- Stack -->
+        <div class="glass-panel rounded-2xl p-4 flex-1 flex flex-col">
+
+            <h3 class="font-bold text-emerald-400 mb-3 flex items-center gap-2">
+
+                <i
+                    data-lucide="history"
+                    class="w-4 h-4">
+                </i>
+
+                Action History (Stack)
+
+            </h3>
+
+            <div
+                id="action-stack"
+                class="flex-1 space-y-2 text-sm overflow-auto">
+            </div>
+
+            <button
+                id="undo-button"
+                class="mt-4 w-full bg-[#2a3825] hover:bg-[#34462e] text-emerald-200 py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 border border-emerald-800">
+
+                <i
+                    data-lucide="undo-2"
+                    class="w-4 h-4">
+                </i>
+
+                Undo (Stack Pop)
+
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+const APP_VERSION = "1.3.0";
+
+
+/* =========================================================
+   PYTHON TOPIC TEMPLATES
+   ========================================================= */
+
+const topicTemplates = {
+
+    "1": {
+        title: "Python OOP + Big O + Stacks",
+
+        code: `# Topic 1: Python OOP + Big O + Stacks
+
+# Two stacks:
+# undo_stack and redo_stack.
+
+class ActionHistory:
+
+    def __init__(self):
+        self.undo_stack = []
+        self.redo_stack = []
+
+    def add(self, action):
+        self.undo_stack.append(action)
+        self.redo_stack.clear()
+
+    def undo(self):
+
+        if not self.undo_stack:
+            return None
+
+        action = self.undo_stack.pop()
+        self.redo_stack.append(action)
+
+        return action
+
+    def redo(self):
+
+        if not self.redo_stack:
+            return None
+
+        action = self.redo_stack.pop()
+        self.undo_stack.append(action)
+
+        return action
+
+
+history = ActionHistory()
+
+
+def plant_from_ui(pos, name):
+
+    history.add(
+        f"Plant {name} at tile {pos + 1}"
+    )
+
+    addPlantToGrid(pos, name)
+
+    pushAction(
+        f"Plant {name} at tile {pos + 1}"
+    )
+
+    updateResources({
+        "water": 20,
+        "seeds": 99,
+        "energy": 10,
+        "hope": 5,
+        "coins": 10
+    })
+
+    print(
+        f"Planted {name} at tile {pos + 1}."
+    )
+
+    print(
+        "push/add: O(1) average time; "
+        "stack storage: O(n)."
+    )
+
+
+def undo_action():
+
+    action = history.undo()
+
+    if action is None:
+        return None
+
+    # The action text contains the tile number used by the UI.
+    # Remove the same plant from the JavaScript garden and
+    # pop the matching item from the visible action stack.
+    try:
+        tile = int(str(action).split("tile ")[1]) - 1
+        removePlantFromGrid(tile)
+    except Exception:
+        pass
+
+    popAction(str(action))
+
+    print(
+        f"UNDO -> {action}"
+    )
+
+    return action
+
+
+# Starter data
+
+addPlantsToDropdown([
+    ["Tomato", "🍅", 5],
+    ["Carrot", "🥕", 3],
+    ["Corn", "🌽", 4],
+    ["Lettuce", "🥬", 2],
+    ["Sunflower", "🌻", 6]
+])
+
+updateResources(
+    50,
+    20,
+    30,
+    10,
+    25
+)
+
+updateClimateQueue([
+    "Heat wave",
+    "Rain",
+    "Strong wind"
+])
+
+print(
+    "Topic 1 loaded. "
+    "Click an empty soil tile to use the Python Stack."
+)
+`
+    },
+
+
+    "2": {
+        title: "Queues & Deques (FIFO Elements)",
+
+        code: `# Topic 2: Queue / FIFO
+
+from collections import deque
+
+climate_queue = deque([
+    "Heat wave",
+    "Rain",
+    "Strong wind"
+])
+
+
+def enqueue_event(event):
+
+    climate_queue.append(event)
+
+    updateClimateQueue(
+        list(climate_queue)
+    )
+
+    print(
+        "ENQUEUE:",
+        event
+    )
+
+
+def dequeue_event():
+
+    if not climate_queue:
+
+        print(
+            "Queue is empty."
+        )
+
+        return None
+
+    event = climate_queue.popleft()
+
+    updateClimateQueue(
+        list(climate_queue)
+    )
+
+    print(
+        "DEQUEUE:",
+        event
+    )
+
+    return event
+
+
+updateClimateQueue(
+    list(climate_queue)
+)
+
+print(
+    "Queue loaded. "
+    "append() = enqueue, "
+    "popleft() = dequeue."
+)
+`
+    },
+
+
+    "3": {
+        title: "Static/Dynamic Arrays, 2D Lists, & Memory Structures",
+
+        code: `# Topic 3: Lists and 2D grid
+
+garden = [
+    ["empty" for _ in range(5)]
+    for _ in range(5)
+]
+
+
+def plant(row, col, name):
+
+    garden[row][col] = name
+
+    pos = row * 5 + col
+
+    addPlantToGrid(
+        pos,
+        name
+    )
+
+    print(
+        f"Placed {name} at ({row}, {col})"
+    )
+
+
+plant(
+    0,
+    0,
+    "Tomato"
+)
+
+plant(
+    1,
+    2,
+    "Carrot"
+)
+
+print(
+    "2D list:",
+    garden
+)
+
+print(
+    "Direct index access is O(1)."
+)
+`
+    },
+
+
+    "4": {
+        title: "Hierarchical Trees & Traversals",
+
+        code: `# Topic 4: Tree traversal
+
+class Node:
+
+    def __init__(self, name):
+
+        self.name = name
+        self.children = []
+
+
+root = Node("Garden")
+
+vegetables = Node(
+    "Vegetables"
+)
+
+flowers = Node(
+    "Flowers"
+)
+
+
+vegetables.children = [
+    Node("Tomato"),
+    Node("Carrot")
+]
+
+flowers.children = [
+    Node("Sunflower"),
+    Node("Rose")
+]
+
+root.children = [
+    vegetables,
+    flowers
+]
+
+
+def preorder(node):
+
+    result = [
+        node.name
+    ]
+
+    for child in node.children:
+
+        result.extend(
+            preorder(child)
+        )
+
+    return result
+
+
+print(
+    "Preorder:",
+    " -> ".join(
+        preorder(root)
+    )
+)
+
+print(
+    "Traversal time: O(n), "
+    "where n is the number of nodes."
+)
+`
+    },
+
+
+    "5": {
+        title: "BFS Garden Helper: Shortest Path & Nearest Crop",
+
+        code: `# Topic 5: Breadth-First Search (BFS) for the Garden Helper
+# This Python example shows the same BFS structure used by the
+# garden helper to navigate from its current tile.
+
+from collections import deque
+
+GARDEN_SIZE = 5
+
+DIRECTIONS = [
+    (-1, 0),
+    (1, 0),
+    (0, -1),
+    (0, 1)
+]
+
+
+def neighbors(tile):
+
+    row = tile // GARDEN_SIZE
+    col = tile % GARDEN_SIZE
+    result = []
+
+    for dr, dc in DIRECTIONS:
+        nr = row + dr
+        nc = col + dc
+
+        if 0 <= nr < GARDEN_SIZE and 0 <= nc < GARDEN_SIZE:
+            result.append(nr * GARDEN_SIZE + nc)
+
+    return result
+
+
+def bfs_shortest_path(start, goal):
+
+    queue = deque([start])
+    visited = {start}
+    previous = {}
+
+    while queue:
+
+        current = queue.popleft()
+
+        if current == goal:
+            break
+
+        for nxt in neighbors(current):
+            if nxt in visited:
+                continue
+
+            visited.add(nxt)
+            previous[nxt] = current
+            queue.append(nxt)
+
+    if goal not in visited:
+        return []
+
+    path = [goal]
+    node = goal
+
+    while node != start:
+        node = previous[node]
+        path.append(node)
+
+    path.reverse()
+    return path
+
+
+def bfs_nearest(start, targets):
+
+    queue = deque([start])
+    visited = {start}
+
+    while queue:
+
+        current = queue.popleft()
+
+        if current in targets:
+            return current
+
+        for nxt in neighbors(current):
+            if nxt not in visited:
+                visited.add(nxt)
+                queue.append(nxt)
+
+    return None
+
+
+# Example: gardener starts at Plot 13 (tile 12).
+gardener_start = 12
+target_plot = 24
+
+path = bfs_shortest_path(
+    gardener_start,
+    target_plot
+)
+
+print(
+    "Shortest BFS path:",
+    path
+)
+
+# Example nearest mature crops:
+mature_crops = {8, 18, 23}
+
+nearest = bfs_nearest(
+    gardener_start,
+    mature_crops
+)
+
+print(
+    "Nearest mature crop tile:",
+    nearest
+)
+
+print(
+    "BFS explores the garden layer by layer and "
+    "finds the nearest reachable target first."
+)
+`
+    }
+
+
+};
+
+
+/* =========================================================
+   GARDEN GAME RUNTIME
+   ========================================================= */
+
+let pyodideInstance = null;
+let currentTopic = "1";
+let selectedTile = null;
+let gardenPlants = {};
+let displayActionHistory = [];
+let gameSnapshots = [];
+let day = 1;
+let harvestedCount = 0;
+let totalPlanted = 0;
+let isProcessingDay = false;
+let autoSaveTimer = null;
+
+const resources = {
+    water: 70,
+    seeds: 15,
+    energy: 45,
+    hope: 25,
+    coins: 50
+};
+
+const MAX = {
+    water: 200,
+    seeds: 100,
+    energy: 120,
+    hope: 100
+};
+
+/*
+ * Crop growth is normalized to a maximum of 10 in-game days. The values preserve
+ * relative real-world maturity: fast vegetables stay fast, while long-season
+ * fruit trees/crops are assigned the longest in-game growth times.
+ * Watering is also normalized to a maximum of 6 care events per crop.
+ */
+const cropCatalog = {
+    // Vegetables
+    Tomato:      { category: "Vegetable", emoji: "🍅", grow: 6, water: 12, sell: 22, seedReward: 1, sizeFactor: 1.00 },
+    Carrot:      { category: "Vegetable", emoji: "🥕", grow: 5, water: 9,  sell: 14, seedReward: 1, sizeFactor: 0.80 },
+    Corn:        { category: "Vegetable", emoji: "🌽", grow: 8, water: 14, sell: 30, seedReward: 1, sizeFactor: 1.00 },
+    Lettuce:     { category: "Vegetable", emoji: "🥬", grow: 4, water: 10, sell: 18, seedReward: 1, sizeFactor: 0.75 },
+    Cucumber:    { category: "Vegetable", emoji: "🥒", grow: 6, water: 12, sell: 24, seedReward: 1, sizeFactor: 1.10 },
+    Potato:      { category: "Vegetable", emoji: "🥔", grow: 8, water: 13, sell: 28, seedReward: 1, sizeFactor: 1.20 },
+    Pumpkin:     { category: "Vegetable", emoji: "🎃", grow: 9, water: 16, sell: 36, seedReward: 1, sizeFactor: 1.80 },
+    Spinach:     { category: "Vegetable", emoji: "🌿", grow: 4, water: 10, sell: 16, seedReward: 1, sizeFactor: 0.70 },
+    Radish:      { category: "Vegetable", emoji: "🌱", grow: 3, water: 8,  sell: 15, seedReward: 1, sizeFactor: 0.70 },
+
+    // Fruits requested by the user
+    Blueberries: { category: "Fruit", emoji: "🫐", grow: 8, water: 15, sell: 34, seedReward: 1, sizeFactor: 0.45 },
+    Mangoes:     { category: "Fruit", emoji: "🥭", grow: 10, water: 20, sell: 55, seedReward: 1, sizeFactor: 2.00 },
+    Bananas:     { category: "Fruit", emoji: "🍌", grow: 9, water: 18, sell: 46, seedReward: 1, sizeFactor: 1.60 },
+    Strawberries:{ category: "Fruit", emoji: "🍓", grow: 5, water: 12, sell: 30, seedReward: 1, sizeFactor: 0.45 },
+    Apples:      { category: "Fruit", emoji: "🍎", grow: 10, water: 18, sell: 60, seedReward: 1, sizeFactor: 1.40 },
+    Watermelon:  { category: "Fruit", emoji: "🍉", grow: 9, water: 20, sell: 48, seedReward: 1, sizeFactor: 2.20 },
+
+    // Flowers
+    Sunflower:   { category: "Flower", emoji: "🌻", grow: 6, water: 13, sell: 34, seedReward: 1, sizeFactor: 1.20 },
+    Rose:        { category: "Flower", emoji: "🌹", grow: 8, water: 14, sell: 42, seedReward: 1, sizeFactor: 0.25 },
+    Marigold:    { category: "Flower", emoji: "🌼", grow: 5, water: 11, sell: 26, seedReward: 1, sizeFactor: 0.30 },
+    Zinnia:      { category: "Flower", emoji: "🌺", grow: 5, water: 11, sell: 28, seedReward: 1, sizeFactor: 0.35 },
+    Lavender:    { category: "Flower", emoji: "💜", grow: 7, water: 10, sell: 38, seedReward: 1, sizeFactor: 0.35 },
+
+    // Other crops
+    Wheat:       { category: "Other Crop", emoji: "🌾", grow: 7, water: 10, sell: 25, seedReward: 2, sizeFactor: 1.00 },
+    Rice:        { category: "Other Crop", emoji: "🌾", grow: 8, water: 18, sell: 32, seedReward: 2, sizeFactor: 0.90 },
+    Sugarcane:   { category: "Other Crop", emoji: "🎋", grow: 10, water: 18, sell: 44, seedReward: 2, sizeFactor: 1.50 }
+};
+
+function deriveWaterings(growDays) {
+    return Math.min(6, Math.max(1, Math.ceil(growDays * 0.6)));
+}
+
+function buildWateringSchedule(growDays, wateringCount) {
+    const base = Math.floor(growDays / wateringCount);
+    const remainder = growDays % wateringCount;
+    return Array.from({ length: wateringCount }, (_, index) => base + (index < remainder ? 1 : 0));
+}
+
+Object.values(cropCatalog).forEach(data => {
+    data.waterings = deriveWaterings(data.grow);
+    data.wateringSchedule = buildWateringSchedule(data.grow, data.waterings);
+});
+
+function weightedCropWeight(sizeFactor = 1, health = 100) {
+    // Most harvests are small. Large and giant harvests are intentionally rare.
+    const roll = Math.random();
+    if (roll < 0.0005) {
+        return +(300 + Math.random() * 200).toFixed(1); // 0.05%: 300-500 kg giant harvest
+    }
+    if (roll < 0.0045) {
+        return +(150 + Math.random() * 150).toFixed(1); // 0.4%: 150-300 kg
+    }
+    if (roll < 0.0195) {
+        return +(60 + Math.random() * 90).toFixed(1); // 1.5%: 60-150 kg
+    }
+
+    let weight;
+    if (roll < 0.0995) {
+        weight = 20 + Math.random() * 40;       // 8%
+    } else if (roll < 0.2995) {
+        weight = 5 + Math.random() * 15;        // 20%
+    } else {
+        weight = 1 + Math.random() * 4;         // 70%
+    }
+
+    const healthFactor = 0.85 + (Math.max(0, Math.min(100, health)) / 100) * 0.25;
+    return +Math.max(1, Math.min(500, weight * (0.75 + sizeFactor * 0.25) * healthFactor)).toFixed(1);
+}
+
+function ensureHarvestSize(plant) {
+    if (!plant) return 1;
+    if (!plant.weight || plant.weight <= 0) {
+        const data = getPlantData(plant.name);
+        plant.weight = weightedCropWeight(data.sizeFactor || 1, plant.health);
+    }
+    return plant.weight;
+}
+
+function getSizeAdjustedPrice(plant) {
+    if (!plant) return 0;
+    const data = getPlantData(plant.name);
+    const weight = ensureHarvestSize(plant);
+    const multiplier = 1 + (Math.log2(Math.max(1, weight)) / 3);
+    return Math.max(1, Math.round(data.sell * multiplier));
+}
+
+function getWateringStatus(plant) {
+    const data = getPlantData(plant.name);
+    const completed = Math.min(data.waterings, plant.wateringCount || 0);
+    if (plant.age >= data.grow) return `💧 ${completed}/${data.waterings}`;
+    if (plant.hydrationDays > 0) return `💧 ${completed}/${data.waterings} · ${plant.hydrationDays}d covered`;
+    return `💧 ${completed}/${data.waterings} · Needs water`;
+}
+
+
+
+let climateEvents = ["Heat wave", "Rain", "Strong wind"];
+
+/* =========================================================
+   GARDENER / BFS SYSTEM
+   ========================================================= */
+
+const gardener = {
+    position: 12,
+    visualPosition: 12,
+    crop: "Carrot",
+    active: false,
+    busy: false,
+    task: "Idle",
+    target: null,
+    path: [],
+    highlightTiles: [],
+    highlightClass: "ring-cyan-300",
+    autoTimer: null,
+    motionToken: 0,
+    pesticideEquipped: true
+};
+
+const PEST_MIN_SPAWN_MS = 22000;
+const PEST_MAX_SPAWN_MS = 38000;
+const PEST_SPREAD_MS = 5000;
+const GARDENER_PEST_CHECK_MS = 250;
+const GARDENER_STEP_MS = 700;
+let pestSpawnTimeout = null;
+let pestSpreadTimer = null;
+let gardenerPestMonitor = null;
+
+const GARDEN_SIZE = 5;
+const GARDEN_STEPS = [
+    [-1, 0],
+    [1, 0],
+    [0, -1],
+    [0, 1]
+];
+
+function tileToRC(tile) {
+    return [Math.floor(tile / GARDEN_SIZE), tile % GARDEN_SIZE];
+}
+
+function rcToTile(row, col) {
+    return row * GARDEN_SIZE + col;
+}
+
+function getGardenNeighbors(tile) {
+    const [row, col] = tileToRC(tile);
+    const neighbors = [];
+    for (const [dr, dc] of GARDEN_STEPS) {
+        const nr = row + dr;
+        const nc = col + dc;
+        if (nr >= 0 && nr < GARDEN_SIZE && nc >= 0 && nc < GARDEN_SIZE) {
+            neighbors.push(rcToTile(nr, nc));
+        }
+    }
+    return neighbors;
+}
+
+// Breadth-first search across the 5x5 garden. Every tile is traversable.
+function bfsShortestPath(start, goal) {
+    start = Number(start);
+    goal = Number(goal);
+    if (start === goal) return [start];
+
+    const queue = [start];
+    let head = 0;
+    const visited = new Set([start]);
+    const previous = new Map();
+
+    while (head < queue.length) {
+        const current = queue[head++];
+        for (const next of getGardenNeighbors(current)) {
+            if (visited.has(next)) continue;
+            visited.add(next);
+            previous.set(next, current);
+            if (next === goal) {
+                const path = [goal];
+                let node = goal;
+                while (node !== start) {
+                    node = previous.get(node);
+                    path.push(node);
+                }
+                return path.reverse();
+            }
+            queue.push(next);
+        }
+    }
+
+    return [];
+}
+
+// BFS that stops at the closest tile matching the supplied condition.
+function bfsFindNearest(start, predicate) {
+    start = Number(start);
+    const queue = [start];
+    let head = 0;
+    const visited = new Set([start]);
+    const previous = new Map();
+
+    while (head < queue.length) {
+        const current = queue[head++];
+        if (predicate(current)) {
+            const path = [current];
+            let node = current;
+            while (node !== start) {
+                node = previous.get(node);
+                path.push(node);
+            }
+            path.reverse();
+            return { target: current, path, distance: path.length - 1 };
+        }
+
+        for (const next of getGardenNeighbors(current)) {
+            if (visited.has(next)) continue;
+            visited.add(next);
+            previous.set(next, current);
+            queue.push(next);
+        }
+    }
+
+    return null;
+}
+
+function bfsTilesWithinDistance(start, radius) {
+    start = Number(start);
+    const queue = [{ tile: start, distance: 0 }];
+    let head = 0;
+    const visited = new Set([start]);
+    const result = [];
+
+    while (head < queue.length) {
+        const item = queue[head++];
+        result.push(item);
+        if (item.distance >= radius) continue;
+        for (const next of getGardenNeighbors(item.tile)) {
+            if (visited.has(next)) continue;
+            visited.add(next);
+            queue.push({ tile: next, distance: item.distance + 1 });
+        }
+    }
+
+    return result;
+}
+
+function syncGardenerCropDropdown() {
+    const source = document.getElementById("crop-selector");
+    const target = document.getElementById("gardener-crop-selector");
+    if (!source || !target) return;
+    target.innerHTML = source.innerHTML;
+    const current = Object.prototype.hasOwnProperty.call(cropCatalog, gardener.crop) ? gardener.crop : source.value;
+    target.value = current || source.value;
+    gardener.crop = target.value || gardener.crop;
+}
+
+function setGardenerHighlight(tiles, className = "ring-cyan-300", duration = 2200) {
+    gardener.highlightTiles = [...new Set((tiles || []).map(Number))];
+    gardener.highlightClass = className;
+    renderGarden();
+    if (duration > 0) {
+        setTimeout(() => {
+            gardener.highlightTiles = [];
+            renderGarden();
+        }, duration);
+    }
+}
+
+function renderGardenerStatus() {
+    const position = document.getElementById("gardener-position");
+    const task = document.getElementById("gardener-task");
+    const target = document.getElementById("gardener-target");
+    const toggle = document.getElementById("gardener-toggle");
+    const pesticide = document.getElementById("gardener-pesticide");
+    const pestCount = document.getElementById("garden-pests");
+
+    if (position) position.textContent = `Plot ${gardener.position + 1}`;
+    if (task) task.textContent = gardener.busy ? gardener.task : (gardener.active ? "Auto care" : gardener.task);
+
+    if (target) {
+        if (gardener.target === null || gardener.target === undefined) {
+            target.textContent = "Target: None";
+        } else {
+            const targetPlant = gardenPlants[gardener.target];
+            const label = targetPlant ? `${targetPlant.name} · Plot ${gardener.target + 1}` : `Plot ${gardener.target + 1}`;
+            const pathLength = gardener.path.length ? gardener.path.length - 1 : 0;
+            target.textContent = `Target: ${label} · BFS path: ${pathLength} step(s)`;
+        }
+    }
+
+    if (pesticide) pesticide.textContent = gardener.pesticideEquipped ? "Equipped" : "Not equipped";
+    if (pestCount) {
+        const activePests = Object.values(gardenPlants).filter(plant => plant.pest).length;
+        pestCount.textContent = String(activePests);
+    }
+
+    if (toggle) {
+        toggle.textContent = gardener.active ? "⏸ Pause Gardener" : "▶ Start Gardener";
+        toggle.classList.toggle("bg-amber-700", gardener.active);
+        toggle.classList.toggle("hover:bg-amber-600", gardener.active);
+        toggle.classList.toggle("bg-emerald-700", !gardener.active);
+        toggle.classList.toggle("hover:bg-emerald-600", !gardener.active);
+    }
+}
+
+function animateGardenerAlongPath(path, task, onArrive) {
+    if (!Array.isArray(path) || !path.length) return showToast("No BFS path found.");
+    if (gardener.busy) return showToast("Gardener is already moving.");
+
+    const motionToken = ++gardener.motionToken;
+    gardener.busy = true;
+    gardener.task = task;
+    gardener.path = [...path];
+    gardener.target = path[path.length - 1];
+    renderGardenerStatus();
+    renderGarden();
+
+    let stepIndex = 0;
+    const moveStep = () => {
+        if (motionToken !== gardener.motionToken) return;
+        if (stepIndex >= gardener.path.length) {
+            gardener.position = gardener.target;
+            gardener.visualPosition = gardener.position;
+            gardener.path = [gardener.position];
+            renderGardenerStatus();
+            renderGarden();
+            gardener.busy = false;
+            onArrive?.();
+            renderGardenerStatus();
+            renderGarden();
+            return;
+        }
+
+        gardener.visualPosition = gardener.path[stepIndex];
+        gardener.position = gardener.path[stepIndex];
+        renderGardenerStatus();
+        renderGarden();
+        stepIndex += 1;
+        setTimeout(moveStep, GARDENER_STEP_MS);
+    };
+
+    moveStep();
+}
+
+function gardenerFindPathToSelected() {
+    if (selectedTile === null || selectedTile === undefined) return showToast("Select a garden plot first.");
+    const path = bfsShortestPath(gardener.position, selectedTile);
+    if (!path.length) return showToast("No path found.");
+    gardener.target = selectedTile;
+    gardener.path = path;
+    gardener.task = "Navigating";
+    setGardenerHighlight(path, "ring-amber-300", 3000);
+    renderGardenerStatus();
+    renderGarden();
+    setGameMessage(`BFS found a shortest path from the gardener at Plot ${gardener.position + 1} to Plot ${selectedTile + 1}.`);
+}
+
+function gardenerFindNearestMature() {
+    const result = bfsFindNearest(gardener.position, tile => {
+        const plant = gardenPlants[tile];
+        return plant && plant.age >= getPlantData(plant.name).grow;
+    });
+
+    if (!result) {
+        gardener.target = null;
+        gardener.path = [];
+        renderGardenerStatus();
+        return showToast("No mature crop found from the gardener's current position.");
+    }
+
+    gardener.target = result.target;
+    gardener.path = result.path;
+    gardener.task = "Nearest mature crop";
+    setGardenerHighlight(result.path, "ring-amber-300", 3200);
+    renderGardenerStatus();
+    renderGarden();
+    setGameMessage(`BFS found the nearest mature crop at Plot ${result.target + 1} in ${result.distance} step(s).`);
+    return result;
+}
+
+function gardenerFindNearestPest() {
+    return bfsFindNearest(gardener.position, tile => {
+        const plant = gardenPlants[tile];
+        return !!plant && plant.pest === true;
+    });
+}
+
+function gardenerDetectAndHandlePest() {
+    if (!gardener.active || !gardener.pesticideEquipped) return false;
+
+    const pest = gardenerFindNearestPest();
+    if (!pest) return false;
+
+    // Interrupt ordinary work immediately when a pest is detected.
+    if (gardener.busy && gardener.task !== "Pest control") {
+        gardener.motionToken++;
+        gardener.busy = false;
+    }
+
+    if (gardener.busy) return true;
+
+    gardener.target = pest.target;
+    gardener.path = pest.path;
+    gardener.task = "Pest control";
+
+    setGardenerHighlight(pest.path, "ring-rose-400", 1800);
+    renderGardenerStatus();
+    renderGarden();
+
+    animateGardenerAlongPath(pest.path, "Pest control", () => {
+        const plant = gardenPlants[pest.target];
+        if (plant && plant.pest) {
+            plant.pest = false;
+            plant.health = Math.min(100, plant.health + 8);
+            setGameMessage(`Gardener spotted a pest at Plot ${pest.target + 1} and eliminated it with pesticide.`);
+            setGardenerHighlight([pest.target], "ring-emerald-300", 1200);
+            renderGarden();
+            renderGardenerStatus();
+            saveGame(false);
+        }
+        gardener.target = null;
+        gardener.path = [gardener.position];
+        gardener.task = "Returning to garden care";
+        renderGardenerStatus();
+        renderGarden();
+        setTimeout(gardenerPerformTask, 500);
+    });
+
+    return true;
+}
+
+function gardenerFindNearestCareTask() {
+    const mature = bfsFindNearest(gardener.position, tile => {
+        const plant = gardenPlants[tile];
+        return plant && plant.age >= getPlantData(plant.name).grow;
+    });
+    if (mature) return { type: "harvest", ...mature };
+
+    const dry = bfsFindNearest(gardener.position, tile => {
+        const plant = gardenPlants[tile];
+        if (!plant || plant.age >= getPlantData(plant.name).grow || plant.hydrationDays > 0) return false;
+        const data = getPlantData(plant.name);
+        return plant.wateringCount < data.waterings && resources.water >= data.water && resources.energy >= 2;
+    });
+    if (dry) return { type: "water", ...dry };
+
+    if (resources.seeds < 1 || resources.energy < 3) return null;
+
+    const empty = bfsFindNearest(gardener.position, tile => !gardenPlants[tile]);
+    if (empty) return { type: "plant", ...empty };
+
+    return null;
+}
+
+function gardenerCompleteTask(type, target) {
+    const plant = gardenPlants[target];
+
+    if (type === "harvest") {
+        if (!plant || plant.age < getPlantData(plant.name).grow) return;
+        const data = getPlantData(plant.name);
+        const harvestWeight = ensureHarvestSize(plant);
+        const harvestPrice = getSizeAdjustedPrice(plant);
+        resources.coins += harvestPrice;
+        resources.seeds = Math.min(MAX.seeds, resources.seeds + data.seedReward);
+        resources.energy = Math.min(MAX.energy, resources.energy + 4);
+        resources.hope = Math.min(MAX.hope, resources.hope + 5);
+        harvestedCount++;
+        delete gardenPlants[target];
+        pushAction(`Gardener harvest ${plant.name} at tile ${target + 1} (${harvestWeight.toFixed(1)} kg, +${harvestPrice} coins)`);
+        syncPythonAction(`Gardener harvest ${plant.name} at tile ${target + 1}`);
+        setGameMessage(`Gardener harvested ${plant.name} at Plot ${target + 1}: ${harvestWeight.toFixed(1)} kg for ${harvestPrice} coins.`);
+    } else if (type === "water") {
+        if (!plant || plant.age >= getPlantData(plant.name).grow || plant.hydrationDays > 0) return;
+        const data = getPlantData(plant.name);
+        if (plant.wateringCount >= data.waterings) return;
+        if (resources.water < data.water || resources.energy < 2) return;
+        resources.water -= data.water;
+        resources.energy -= 2;
+        const coverage = plant.wateringPlan[plant.wateringCount] || 1;
+        plant.wateringCount += 1;
+        plant.hydrationDays = coverage;
+        plant.watered = true;
+        plant.health = Math.min(100, plant.health + 5);
+        pushAction(`Gardener water ${plant.name} at tile ${target + 1} (${plant.wateringCount}/${data.waterings})`);
+        syncPythonAction(`Gardener water ${plant.name} at tile ${target + 1}`);
+        setGameMessage(`Gardener watered ${plant.name} at Plot ${target + 1} (${plant.wateringCount}/${data.waterings}).`);
+    } else if (type === "plant") {
+        if (gardenPlants[target]) return;
+        const cropName = gardener.crop || "Carrot";
+        if (!cropCatalog[cropName]) return;
+        if (resources.seeds < 1 || resources.energy < 3) return;
+        resources.seeds -= 1;
+        resources.energy -= 3;
+        addPlantToGrid(target, cropName, true);
+        pushAction(`Gardener plant ${cropName} at tile ${target + 1}`);
+        syncPythonAction(`Gardener plant ${cropName} at tile ${target + 1}`);
+        setGameMessage(`Gardener planted ${cropName} at Plot ${target + 1}.`);
+    }
+
+    clampResource("coins");
+    renderResources();
+    renderGarden();
+    updateGardenStatus();
+    saveGame(false);
+}
+
+function gardenerPerformTask() {
+    if (!gardener.active || gardener.busy) return;
+
+    if (gardenerDetectAndHandlePest()) return;
+
+    const task = gardenerFindNearestCareTask();
+    if (!task) {
+        gardener.task = "Patrolling";
+        gardener.target = null;
+        gardener.path = [gardener.position];
+        renderGardenerStatus();
+        return;
+    }
+
+    const labels = {
+        harvest: "Harvesting",
+        water: "Watering",
+        plant: "Planting"
+    };
+
+    saveSnapshot(`Gardener ${task.type} at tile ${task.target + 1}`);
+
+    animateGardenerAlongPath(task.path, labels[task.type], () => {
+        gardenerCompleteTask(task.type, task.target);
+        gardener.task = "Returning to garden care";
+        renderGardenerStatus();
+        setTimeout(gardenerPerformTask, 500);
+    });
+}
+
+function toggleGardener() {
+    gardener.active = !gardener.active;
+    if (gardener.active) {
+        if (gardener.autoTimer) clearInterval(gardener.autoTimer);
+        gardener.autoTimer = setInterval(gardenerPerformTask, 1000);
+        showToast("Gardener started. It walks slowly, cares for crops, and responds to pests immediately.");
+        gardenerPerformTask();
+    } else {
+        if (gardener.autoTimer) clearInterval(gardener.autoTimer);
+        gardener.autoTimer = null;
+        gardener.task = "Paused";
+        renderGardenerStatus();
+        showToast("Gardener paused.");
+    }
+    renderGardenerStatus();
+}
+
+/* =========================================================
+   NATURAL PEST SYSTEM
+   ========================================================= */
+
+function getPlantedTiles(predicate = () => true) {
+    return Object.keys(gardenPlants)
+        .map(Number)
+        .filter(tile => gardenPlants[tile] && predicate(gardenPlants[tile]));
+}
+
+function countActivePests() {
+    return getPlantedTiles(plant => plant.pest === true).length;
+}
+
+function spawnNaturalPest() {
+    const candidates = getPlantedTiles(plant => !plant.pest);
+
+    if (candidates.length) {
+        const tile = candidates[Math.floor(Math.random() * candidates.length)];
+        const plant = gardenPlants[tile];
+        plant.pest = true;
+        plant.health = Math.max(10, plant.health - 8);
+
+        setGardenerHighlight([tile], "ring-rose-400", 2400);
+        setGameMessage(`A pest appeared naturally on ${plant.name} at Plot ${tile + 1}. The gardener is monitoring the threat.`);
+        renderGarden();
+        renderGardenerStatus();
+        saveGame(false);
+    }
+
+    scheduleNextNaturalPest();
+}
+
+function scheduleNextNaturalPest() {
+    if (pestSpawnTimeout) clearTimeout(pestSpawnTimeout);
+    const delay = Math.floor(Math.random() * (PEST_MAX_SPAWN_MS - PEST_MIN_SPAWN_MS + 1)) + PEST_MIN_SPAWN_MS;
+    pestSpawnTimeout = setTimeout(spawnNaturalPest, delay);
+}
+
+function spreadPestsNaturally() {
+    const pestTiles = getPlantedTiles(plant => plant.pest === true);
+    if (!pestTiles.length) return;
+
+    const newTargets = new Set();
+
+    pestTiles.forEach(source => {
+        // Natural spread is intentionally random and independent from
+        // the game's FIFO/LIFO systems and from BFS/DFS traversal.
+        if (Math.random() > 0.65) return;
+
+        const neighbors = getGardenNeighbors(source)
+            .filter(tile => gardenPlants[tile] && !gardenPlants[tile].pest);
+
+        if (!neighbors.length) return;
+        const target = neighbors[Math.floor(Math.random() * neighbors.length)];
+        newTargets.add(target);
+    });
+
+    if (!newTargets.size) return;
+
+    newTargets.forEach(tile => {
+        const plant = gardenPlants[tile];
+        if (!plant) return;
+        plant.pest = true;
+        plant.health = Math.max(10, plant.health - 5);
+    });
+
+    setGameMessage(`${newTargets.size} pest threat${newTargets.size === 1 ? "" : "s"} spread naturally through nearby crops.`);
+    setGardenerHighlight([...newTargets], "ring-rose-400", 1600);
+    renderGarden();
+    renderGardenerStatus();
+    saveGame(false);
+}
+
+function startNaturalPestSystem() {
+    if (pestSpreadTimer) clearInterval(pestSpreadTimer);
+    if (gardenerPestMonitor) clearInterval(gardenerPestMonitor);
+    if (pestSpawnTimeout) clearTimeout(pestSpawnTimeout);
+
+    // A pest can first appear at a randomized time around 30 seconds.
+    scheduleNextNaturalPest();
+
+    // Once a pest exists, it may spread every 5 seconds through random adjacent crops.
+    pestSpreadTimer = setInterval(spreadPestsNaturally, PEST_SPREAD_MS);
+
+    // Check frequently so an active gardener can interrupt ordinary work immediately.
+    gardenerPestMonitor = setInterval(gardenerDetectAndHandlePest, GARDENER_PEST_CHECK_MS);
+}
+
+function stopNaturalPestSystem() {
+    if (pestSpreadTimer) clearInterval(pestSpreadTimer);
+    if (gardenerPestMonitor) clearInterval(gardenerPestMonitor);
+    if (pestSpawnTimeout) clearTimeout(pestSpawnTimeout);
+    pestSpreadTimer = null;
+    gardenerPestMonitor = null;
+    pestSpawnTimeout = null;
+}
+
+function gardenerIrrigateArea() {
+    if (resources.water < 12) return showToast("You need at least 12 L of water.");
+    if (resources.energy < 2) return showToast("You need at least 2 Wh of energy.");
+
+    const area = bfsTilesWithinDistance(gardener.position, 2);
+    const plotIds = area.map(item => item.tile);
+    const growingPlants = area.filter(item => gardenPlants[item.tile] && gardenPlants[item.tile].age < getPlantData(gardenPlants[item.tile].name).grow);
+
+    saveSnapshot("Gardener irrigate area");
+    resources.water -= 12;
+    resources.energy -= 2;
+
+    growingPlants.forEach(item => {
+        const plant = gardenPlants[item.tile];
+        const data = getPlantData(plant.name);
+        if (plant.hydrationDays > 0 || plant.age >= data.grow) return;
+        const coverage = plant.wateringPlan?.[plant.wateringCount] || 1;
+        plant.hydrationDays = coverage;
+        plant.watered = true;
+        plant.health = Math.min(100, plant.health + 5);
+    });
+
+    pushAction(`Gardener irrigated ${growingPlants.length} plant(s) within BFS radius 2`);
+    syncPythonAction("Gardener irrigated area");
+    setGardenerHighlight(plotIds, "ring-cyan-300", 2600);
+    renderResources();
+    renderGarden();
+    setGameMessage(`Irrigation spread by BFS from Plot ${gardener.position + 1}; ${growingPlants.length} plant(s) were watered.`);
+    saveGame(false);
+}
+
+
+/* =========================================================
+   RESOURCE HELPERS
+   ========================================================= */
+
+function clampResource(key) {
+    if (key === "coins") {
+        resources.coins = Math.max(0, Math.floor(resources.coins));
+        return;
+    }
+    resources[key] = Math.max(0, Math.min(MAX[key], Math.floor(resources[key])));
+}
+
+function updateResources(water = 0, seeds = 0, energy = 0, hope = 0, coins = 0) {
+    let vals = { water, seeds, energy, hope, coins };
+    if (water && typeof water === "object") vals = { ...vals, ...water };
+
+    Object.keys(vals).forEach(key => {
+        if (typeof vals[key] === "number" && Number.isFinite(vals[key])) {
+            resources[key] = vals[key];
+            clampResource(key);
+        }
+    });
+    renderResources();
+    updateScore();
+}
+
+function renderResources() {
+    const defs = {
+        water:  ["water-text",  "water-bar",  " L",  MAX.water],
+        seeds:  ["seeds-text",  "seeds-bar",  "",   MAX.seeds],
+        energy: ["energy-text", "energy-bar", " Wh", MAX.energy],
+        hope:   ["hope-text",   "hope-bar",   "",   MAX.hope]
+    };
+
+    for (const [key, [textId, barId, suffix, max]] of Object.entries(defs)) {
+        const value = Math.round(resources[key]);
+        const text = document.getElementById(textId);
+        const bar = document.getElementById(barId);
+        if (text) text.textContent = `${value} / ${max}${suffix}`;
+        if (bar) bar.style.width = `${Math.max(0, Math.min(100, value / max * 100))}%`;
+    }
+
+    const coins = document.getElementById("coins-text");
+    if (coins) coins.textContent = `${Math.floor(resources.coins)} Coins`;
+}
+
+function spend(key, amount) {
+    if (resources[key] < amount) return false;
+    resources[key] -= amount;
+    clampResource(key);
+    renderResources();
+    return true;
+}
+
+function earn(key, amount) {
+    resources[key] += amount;
+    clampResource(key);
+    renderResources();
+}
+
+/* =========================================================
+   PLANT DROPDOWN
+   ========================================================= */
+
+function addPlantsToDropdown(plants) {
+    const select = document.getElementById("crop-selector");
+    if (!select) return;
+    select.innerHTML = "";
+
+    const entries = (plants || []).map(item => {
+        const name = item[0];
+        const data = cropCatalog[name] || {};
+        return {
+            name,
+            category: data.category || "Crop",
+            emoji: item[1] || data.emoji || "🌱",
+            grow: data.grow || 2,
+            water: data.water || 10,
+            waterings: data.waterings || deriveWaterings(data.grow || 2),
+            sell: data.sell || item[2] || 10
+        };
+    });
+
+    if (!entries.length) {
+        Object.entries(cropCatalog).forEach(([name, data]) => entries.push({ name, ...data }));
+    }
+
+    entries.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.name;
+        option.dataset.emoji = item.emoji;
+        option.dataset.grow = item.grow;
+        option.dataset.water = item.water;
+        option.dataset.waterings = item.waterings;
+        option.dataset.sell = item.sell;
+        option.textContent = `${item.emoji} ${item.name} · ${item.grow}d · 💧${item.waterings} · Base ${item.sell}c`;
+        select.appendChild(option);
+    });
+}
+
+function initializeCropDropdown() {
+    addPlantsToDropdown(Object.entries(cropCatalog).map(([name, data]) => [name, data.emoji, data.sell]));
+}
+
+/* =========================================================
+   GRID / PLANT STATE
+   ========================================================= */
+
+function getPlantData(name) {
+    return cropCatalog[name] || cropCatalog.Tomato;
+}
+
+function addPlantToGrid(pos, name, silent = false) {
+    const index = Number(pos);
+    if (index < 0 || index >= 25 || !cropCatalog[name]) return false;
+
+    const data = getPlantData(name);
+    gardenPlants[index] = {
+        name: String(name),
+        age: 0,
+        watered: false,
+        hydrationDays: 0,
+        wateringCount: 0,
+        wateringPlan: [...data.wateringSchedule],
+        health: 100,
+        pest: false,
+        weight: null,
+        plantedDay: day
+    };
+    totalPlanted++;
+    renderGarden();
+    updateGardenStatus();
+    if (!silent) setGameMessage(`Planted ${name} in plot ${index + 1}. It needs ${data.waterings} watering event(s) across ${data.grow} growth day(s).`);
+    return true;
+}
+
+function removePlantFromGrid(pos, silent = false) {
+    const index = Number(pos);
+    if (index >= 0 && index < 25 && gardenPlants[index]) {
+        delete gardenPlants[index];
+        if (!silent) renderGarden();
+        updateGardenStatus();
+    }
+}
+
+function plantFromUI(pos) {
+    const index = Number(pos);
+    if (gardenPlants[index]) {
+        selectedTile = index;
+        renderGarden();
+        updateSelectedPlot();
+        return;
+    }
+
+    const select = document.getElementById("crop-selector");
+    const name = select?.value;
+    if (!name) return showToast("Choose a crop first.");
+    if (resources.seeds < 1) return showToast("You need at least 1 seed.");
+    if (resources.energy < 3) return showToast("Not enough solar energy to plant.");
+
+    saveSnapshot(`Plant ${name} at tile ${index + 1}`);
+    resources.seeds -= 1;
+    resources.energy -= 3;
+    addPlantToGrid(index, name);
+    pushAction(`Plant ${name} at tile ${index + 1}`);
+    renderResources();
+    setGameMessage(`${name} planted. Water it, then advance the day.`);
+    syncPythonAction(`Plant ${name} at tile ${index + 1}`);
+    saveGame(false);
+}
+
+function renderGarden() {
+    const grid = document.getElementById("garden-grid");
+    if (!grid) return;
+    grid.innerHTML = "";
+
+    for (let i = 0; i < 25; i++) {
+        const cell = document.createElement("button");
+        cell.type = "button";
+        cell.className = "relative aspect-square bg-[#2a3825] rounded-xl flex flex-col items-center justify-center border border-emerald-800 hover:border-emerald-400 hover:bg-[#34462e] transition p-1 overflow-hidden";
+
+        if (selectedTile === i) {
+            cell.classList.add("ring-2", "ring-emerald-300");
+        }
+        if (gardener.highlightTiles.includes(i)) {
+            cell.classList.add("ring-2", gardener.highlightClass);
+        } else if (gardener.path.includes(i)) {
+            cell.classList.add("ring-1", "ring-amber-300");
+        }
+
+        const gardenerHere = gardener.visualPosition === i;
+        const plant = gardenPlants[i];
+        if (!plant) {
+            cell.innerHTML = `<div class="text-3xl">🟫</div><div class="text-[9px] text-emerald-500 mt-1">Empty</div>`;
+            cell.title = `Empty soil · Plot ${i + 1}`;
+            cell.addEventListener("click", () => plantFromUI(i));
+        } else {
+            const data = getPlantData(plant.name);
+            const mature = plant.age >= data.grow;
+            const pct = Math.min(100, Math.round(plant.age / data.grow * 100));
+            const waterState = getWateringStatus(plant);
+            const emoji = mature ? `✨${data.emoji}` : (plant.age === 0 ? "🌱" : data.emoji);
+            const harvestLine = mature ? `${ensureHarvestSize(plant).toFixed(1)}kg · ${getSizeAdjustedPrice(plant)}c` : waterState;
+            cell.innerHTML = `
+                ${gardenerHere ? '<div class="absolute top-1 left-1 text-base animate-pulse z-10" title="Gardener">🧑‍🌾</div>' : ''}
+                ${plant.pest ? '<div class="absolute top-1 right-1 text-sm z-10" title="Pest affected">🦠</div>' : ''}
+                <div class="text-3xl leading-none">${emoji}</div>
+                <div class="text-[9px] font-bold text-emerald-100 mt-1 truncate max-w-full px-1">${escapeHtml(plant.name)}</div>
+                <div class="w-4/5 h-1.5 bg-[#111711] rounded-full overflow-hidden mt-1">
+                    <div class="h-full bg-emerald-500" style="width:${pct}%"></div>
+                </div>
+                <div class="text-[8px] ${plant.pest ? 'text-rose-300' : mature ? 'text-amber-300' : plant.hydrationDays > 0 ? 'text-blue-300' : 'text-rose-300'} mt-1">${plant.pest ? 'Pest risk · ' : ''}${mature ? `Mature · ${harvestLine}` : `${plant.age}/${data.grow}d · ${harvestLine}`}</div>
+            `;
+            cell.title = `${plant.name} · ${mature ? `Ready: ${ensureHarvestSize(plant).toFixed(1)} kg · ${getSizeAdjustedPrice(plant)} coins` : `${data.grow - plant.age} day(s) left`} · ${waterState}`;
+            cell.addEventListener("click", () => {
+                selectedTile = i;
+                renderGarden();
+                updateSelectedPlot();
+            });
+        }
+
+        if (!plant && gardenerHere) {
+            cell.innerHTML = `<div class="absolute top-1 left-1 text-base animate-pulse z-10" title="Gardener">🧑‍🌾</div>${cell.innerHTML}`;
+        }
+
+        grid.appendChild(cell);
+    }
+
+    updateGardenerRenderState();
+    updateSelectedPlot();
+    updateGardenStatus();
+}
+
+function updateGardenerRenderState() {
+    renderGardenerStatus();
+}
+
+function updateSelectedPlot() {
+    const box = document.getElementById("selected-plot");
+    const waterBtn = document.getElementById("water-button");
+    const harvestBtn = document.getElementById("harvest-button");
+
+    const plant = selectedTile !== null ? gardenPlants[selectedTile] : null;
+    if (!plant) {
+        if (box) box.classList.add("hidden");
+        if (waterBtn) waterBtn.disabled = true;
+        if (harvestBtn) harvestBtn.disabled = true;
+        return;
+    }
+
+    const data = getPlantData(plant.name);
+    const mature = plant.age >= data.grow;
+    const price = mature ? getSizeAdjustedPrice(plant) : null;
+    const sizeText = mature ? `${ensureHarvestSize(plant).toFixed(1)} kg · ~${price} coins` : "Size revealed at maturity";
+    if (box) {
+        box.classList.remove("hidden");
+        box.innerHTML = `<strong>Selected Plot ${selectedTile + 1}</strong> · ${data.emoji} ${escapeHtml(plant.name)} · ${mature ? '<span class="text-amber-300">Ready to harvest</span>' : `${plant.age}/${data.grow} days grown`} · ${sizeText} · ${getWateringStatus(plant)}`;
+    }
+    if (waterBtn) waterBtn.disabled = mature || plant.hydrationDays > 0 || plant.wateringCount >= data.waterings || resources.water < data.water || resources.energy < 2;
+    if (harvestBtn) harvestBtn.disabled = !mature;
+}
+
+function waterSelected() {
+    if (selectedTile === null || !gardenPlants[selectedTile]) return showToast("Select a growing plant first.");
+    const plant = gardenPlants[selectedTile];
+    const data = getPlantData(plant.name);
+    if (plant.age >= data.grow) return showToast("This plant is already mature.");
+    if (plant.hydrationDays > 0) return showToast("This plant is still hydrated.");
+    if (plant.wateringCount >= data.waterings) return showToast("This crop has received all of its planned watering events.");
+    if (resources.water < data.water) return showToast("Not enough water.");
+    if (resources.energy < 2) return showToast("Not enough solar energy.");
+
+    saveSnapshot(`Water ${plant.name} at tile ${selectedTile + 1}`);
+    resources.water -= data.water;
+    resources.energy -= 2;
+    const coverage = plant.wateringPlan[plant.wateringCount] || 1;
+    plant.wateringCount += 1;
+    plant.hydrationDays = coverage;
+    plant.watered = true;
+    plant.health = Math.min(100, plant.health + 5);
+    pushAction(`Water ${plant.name} at tile ${selectedTile + 1} (${plant.wateringCount}/${data.waterings})`);
+    renderResources();
+    renderGarden();
+    setGameMessage(`${plant.name} received watering ${plant.wateringCount}/${data.waterings} and is hydrated for ${coverage} day(s).`);
+    syncPythonAction(`Water ${plant.name} at tile ${selectedTile + 1}`);
+    saveGame(false);
+}
+
+function harvestSelected() {
+    if (selectedTile === null || !gardenPlants[selectedTile]) return showToast("Select a plant first.");
+    const plant = gardenPlants[selectedTile];
+    const data = getPlantData(plant.name);
+    if (plant.age < data.grow) return showToast("That plant is not mature yet.");
+
+    const harvestWeight = ensureHarvestSize(plant);
+    const harvestPrice = getSizeAdjustedPrice(plant);
+    saveSnapshot(`Harvest ${plant.name} at tile ${selectedTile + 1}`);
+    resources.coins += harvestPrice;
+    resources.seeds = Math.min(MAX.seeds, resources.seeds + data.seedReward);
+    resources.energy = Math.min(MAX.energy, resources.energy + 4);
+    resources.hope = Math.min(MAX.hope, resources.hope + 5);
+    harvestedCount++;
+    delete gardenPlants[selectedTile];
+    const harvestedTile = selectedTile;
+    selectedTile = null;
+    pushAction(`Harvest ${plant.name} at tile ${harvestedTile + 1} (${harvestWeight.toFixed(1)} kg, +${harvestPrice} coins)`);
+    renderResources();
+    renderGarden();
+    setGameMessage(`Harvested ${plant.name} at ${harvestWeight.toFixed(1)} kg! +${harvestPrice} coins and +${data.seedReward} seed.`);
+    syncPythonAction(`Harvest ${plant.name} at tile ${harvestedTile + 1}`);
+    saveGame(false);
+}
+
+/* =========================================================
+   DAY / CLIMATE SYSTEM
+   ========================================================= */
+
+function updateClimateQueue(events) {
+    climateEvents = Array.isArray(events) ? [...events] : [];
+    const container = document.getElementById("climate-queue");
+    if (!container) return;
+    container.innerHTML = "";
+
+    climateEvents.slice(0, 5).forEach((event, index) => {
+        const div = document.createElement("div");
+        div.className = "p-3 bg-amber-950/40 border border-amber-900 rounded-xl text-xs";
+        div.innerHTML = `<div class="font-bold text-amber-400">${index + 1}. ${escapeHtml(event)}</div>`;
+        if (index === 0) div.innerHTML += `<div class="text-amber-200/70 mt-1">Next event</div>`;
+        container.appendChild(div);
+    });
+
+    if (!climateEvents.length) {
+        const empty = document.createElement("div");
+        empty.className = "text-xs text-emerald-500";
+        empty.textContent = "Queue empty.";
+        container.appendChild(empty);
+    }
+}
+
+function randomClimateEvent() {
+    const pool = ["Heat wave", "Rain", "Strong wind", "Rain", "Heat wave"];
+    return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function processClimateEvent(event) {
+    switch (event) {
+        case "Rain":
+            resources.water = Math.min(MAX.water, resources.water + 35);
+            Object.values(gardenPlants).forEach(p => {
+                const data = getPlantData(p.name);
+                if (p.age >= data.grow || p.hydrationDays > 0) return;
+                const coverage = p.wateringPlan?.[p.wateringCount] || 1;
+                p.hydrationDays = coverage;
+                p.watered = true;
+            });
+            resources.hope = Math.min(MAX.hope, resources.hope + 3);
+            return "Rain replenished 35 L and hydrated growing plants.";
+        case "Heat wave":
+            resources.water = Math.max(0, resources.water - 25);
+            resources.hope = Math.max(0, resources.hope - 2);
+            Object.values(gardenPlants).forEach(p => p.health = Math.max(10, p.health - 10));
+            return "Heat wave used 25 L of water and stressed the plants.";
+        case "Strong wind":
+            resources.energy = Math.max(0, resources.energy - 8);
+            resources.hope = Math.max(0, resources.hope - 1);
+            Object.values(gardenPlants).forEach(p => {
+                if (p.age < getPlantData(p.name).grow) p.health = Math.max(10, p.health - 5);
+            });
+            return "Strong wind reduced 8 Wh and slightly stressed growing plants.";
+        default:
+            return `${event} passed quietly.`;
+    }
+}
+
+function nextDay() {
+    if (isProcessingDay) return;
+    isProcessingDay = true;
+
+    saveSnapshot(`Advance to Day ${day + 1}`);
+
+    let messages = [];
+    const currentEvent = climateEvents.shift() || null;
+    if (currentEvent) messages.push(processClimateEvent(currentEvent));
+
+    let grew = 0;
+    let stressed = 0;
+
+    Object.entries(gardenPlants).forEach(([index, plant]) => {
+        const data = getPlantData(plant.name);
+        if (plant.age >= data.grow) return;
+
+        if (plant.hydrationDays > 0) {
+            plant.age = Math.min(data.grow, plant.age + 1);
+            plant.hydrationDays -= 1;
+            plant.watered = plant.hydrationDays > 0;
+            plant.health = Math.min(100, plant.health + 5);
+            grew++;
+            if (plant.age >= data.grow) {
+                ensureHarvestSize(plant);
+                plant.watered = false;
+                plant.hydrationDays = 0;
+            }
+        } else {
+            plant.watered = false;
+            plant.health -= 10;
+            stressed++;
+            if (plant.health <= 0) {
+                delete gardenPlants[index];
+                if (selectedTile === Number(index)) selectedTile = null;
+                messages.push(`${plant.name} withered from lack of water.`);
+            }
+        }
+    });
+
+    day += 1;
+    resources.energy = Math.min(MAX.energy, resources.energy + 15);
+    resources.hope = Math.max(0, Math.min(MAX.hope, resources.hope + (grew * 2) - (stressed * 2)));
+    resources.water = Math.min(MAX.water, resources.water + 8);
+
+    climateEvents.push(randomClimateEvent());
+    updateClimateQueue(climateEvents);
+    renderResources();
+    renderGarden();
+    updateScore();
+
+    const summary = [
+        `Day ${day} started.`,
+        currentEvent ? messages.shift() : null,
+        `${grew} plant(s) grew.`,
+        stressed ? `${stressed} plant(s) were not watered.` : "All growing plants were cared for."
+    ].filter(Boolean).join(" ");
+    setGameMessage(summary);
+    pushAction(`Day ${day} started`);
+    syncPythonAction(`Day ${day} started`);
+    saveGame(false);
+    isProcessingDay = false;
+}
+
+/* =========================================================
+   SCORE / STATUS
+   ========================================================= */
+
+function updateScore() {
+    const alive = Object.values(gardenPlants).length;
+    const mature = Object.values(gardenPlants).filter(p => p.age >= getPlantData(p.name).grow).length;
+    const health = alive ? Math.round(Object.values(gardenPlants).reduce((s, p) => s + p.health, 0) / alive) : 0;
+    const score = Math.max(0, Math.min(100, Math.round(resources.hope * 0.45 + health * 0.25 + Math.min(30, harvestedCount * 5))));
+    const counter = document.getElementById("stewardship-counter");
+    if (counter) counter.textContent = `${score}%`;
+    const goal = document.getElementById("goal-status");
+    if (goal) goal.textContent = score >= 80 ? "Excellent" : score >= 50 ? "Growing" : "Recover";
+}
+
+function updateGardenStatus() {
+    const plants = Object.values(gardenPlants);
+    const growing = plants.filter(p => p.age < getPlantData(p.name).grow).length;
+    const mature = plants.filter(p => p.age >= getPlantData(p.name).grow).length;
+    const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = String(value);
+    };
+    setText("growing-count", growing);
+    setText("mature-count", mature);
+    setText("harvest-count", harvestedCount);
+
+    const dayCounter = document.getElementById("day-counter");
+    if (dayCounter) dayCounter.textContent = day;
+
+    updateSelectedPlot();
+    updateScore();
+}
+
+function setGameMessage(message) {
+    const el = document.getElementById("game-message");
+    if (el) el.textContent = message;
+}
+
+/* =========================================================
+   ACTION STACK + UNDO SNAPSHOTS
+   ========================================================= */
+
+function pushAction(action) {
+    displayActionHistory.push(String(action));
+    if (displayActionHistory.length > 8) displayActionHistory.shift();
+    renderActionStack();
+}
+
+function popAction(action) {
+    const index = displayActionHistory.lastIndexOf(String(action));
+    if (index !== -1) displayActionHistory.splice(index, 1);
+    else if (displayActionHistory.length) displayActionHistory.pop();
+    renderActionStack();
+}
+
+function renderActionStack() {
+    const container = document.getElementById("action-stack");
+    if (!container) return;
+    container.innerHTML = "";
+    [...displayActionHistory].reverse().forEach(action => {
+        const div = document.createElement("div");
+        div.className = "bg-emerald-950/60 border-l-2 border-amber-500 px-3 py-2 rounded text-xs text-emerald-100";
+        div.textContent = `→ ${action}`;
+        container.appendChild(div);
+    });
+}
+
+function cloneGameState() {
+    return {
+        day,
+        harvestedCount,
+        totalPlanted,
+        selectedTile,
+        resources: { ...resources },
+        gardenPlants: JSON.parse(JSON.stringify(gardenPlants)),
+        climateEvents: [...climateEvents],
+        displayActionHistory: [...displayActionHistory],
+        gardener: {
+            position: gardener.position,
+            crop: gardener.crop,
+            active: gardener.active,
+            task: gardener.task,
+            pesticideEquipped: gardener.pesticideEquipped
+        }
+    };
+}
+
+function saveSnapshot(label) {
+    gameSnapshots.push({ label, state: cloneGameState() });
+    if (gameSnapshots.length > 20) gameSnapshots.shift();
+}
+
+function restoreSnapshot(snapshot) {
+    const s = snapshot.state;
+    day = s.day;
+    harvestedCount = s.harvestedCount;
+    totalPlanted = s.totalPlanted;
+    selectedTile = s.selectedTile;
+    Object.assign(resources, s.resources);
+    gardenPlants = JSON.parse(JSON.stringify(s.gardenPlants));
+    climateEvents = [...s.climateEvents];
+    displayActionHistory = [...s.displayActionHistory];
+    if (s.gardener) {
+        gardener.position = Number.isInteger(s.gardener.position) ? s.gardener.position : gardener.position;
+        gardener.visualPosition = gardener.position;
+        gardener.crop = s.gardener.crop || gardener.crop;
+        gardener.task = s.gardener.task || "Idle";
+        gardener.pesticideEquipped = s.gardener.pesticideEquipped !== false;
+        gardener.path = [gardener.position];
+        gardener.target = null;
+        gardener.busy = false;
+    }
+    renderResources();
+    updateClimateQueue(climateEvents);
+    renderGarden();
+    renderActionStack();
+    updateGardenStatus();
+}
+
+function triggerUndo() {
+    if (!gameSnapshots.length) return showToast("Stack is empty.");
+    gardener.motionToken++;
+    gardener.busy = false;
+    const snapshot = gameSnapshots.pop();
+    restoreSnapshot(snapshot);
+    popPythonAction();
+    showToast(`Undid: ${snapshot.label}`);
+    setGameMessage(`Undid the last action using the stack.`);
+    saveGame(false);
+}
+
+/* =========================================================
+   PERSISTENCE
+   ========================================================= */
+
+function serializeGame() {
+    return {
+        day,
+        harvestedCount,
+        totalPlanted,
+        selectedTile,
+        resources: { ...resources },
+        gardenPlants: JSON.parse(JSON.stringify(gardenPlants)),
+        climateEvents: [...climateEvents],
+        displayActionHistory: [...displayActionHistory],
+        gardener: {
+            position: gardener.position,
+            crop: gardener.crop,
+            active: gardener.active,
+            task: gardener.task,
+            pesticideEquipped: gardener.pesticideEquipped
+        }
+    };
+}
+
+function saveGame(showMessage = true) {
+    try {
+        localStorage.setItem("pythonGardenSave", JSON.stringify(serializeGame()));
+        if (showMessage) showToast("Game saved.");
+    } catch (err) {
+        if (showMessage) showToast("Could not save the game.");
+    }
+}
+
+function normalizePlantState(plant) {
+    if (!plant || !cropCatalog[plant.name]) return plant;
+    const data = getPlantData(plant.name);
+    if (!Array.isArray(plant.wateringPlan) || plant.wateringPlan.length !== data.waterings) {
+        plant.wateringPlan = [...data.wateringSchedule];
+    }
+    plant.wateringCount = Math.max(0, Math.min(data.waterings, Number(plant.wateringCount) || 0));
+    plant.hydrationDays = Math.max(0, Number(plant.hydrationDays) || (plant.watered ? 1 : 0));
+    plant.watered = plant.hydrationDays > 0;
+    plant.health = Number.isFinite(Number(plant.health)) ? Number(plant.health) : 100;
+    plant.pest = Boolean(plant.pest);
+    if (plant.age >= data.grow) ensureHarvestSize(plant);
+    return plant;
+}
+
+function loadGame() {
+    try {
+        const raw = localStorage.getItem("pythonGardenSave");
+        if (!raw) return false;
+        const s = JSON.parse(raw);
+        day = Number(s.day) || 1;
+        harvestedCount = Number(s.harvestedCount) || 0;
+        totalPlanted = Number(s.totalPlanted) || 0;
+        selectedTile = Number.isInteger(s.selectedTile) ? s.selectedTile : null;
+        Object.assign(resources, s.resources || {});
+        gardenPlants = s.gardenPlants || {};
+        Object.keys(gardenPlants).forEach(key => normalizePlantState(gardenPlants[key]));
+        climateEvents = Array.isArray(s.climateEvents) && s.climateEvents.length ? s.climateEvents : ["Heat wave", "Rain", "Strong wind"];
+        displayActionHistory = Array.isArray(s.displayActionHistory) ? s.displayActionHistory : [];
+        if (s.gardener) {
+            gardener.position = Number.isInteger(s.gardener.position) ? s.gardener.position : 12;
+            gardener.visualPosition = gardener.position;
+            gardener.crop = s.gardener.crop || "Carrot";
+            gardener.active = Boolean(s.gardener.active);
+            gardener.task = s.gardener.task || "Idle";
+            gardener.pesticideEquipped = s.gardener.pesticideEquipped !== false;
+        }
+        Object.keys(MAX).forEach(clampResource);
+        clampResource("coins");
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+
+function resetGame() {
+    localStorage.removeItem("pythonGardenSave");
+    stopNaturalPestSystem();
+    gardener.motionToken++;
+    if (gardener.autoTimer) clearInterval(gardener.autoTimer);
+    gardener.autoTimer = null;
+    gardener.active = false;
+    gardener.busy = false;
+    gardener.position = 12;
+    gardener.visualPosition = 12;
+    gardener.crop = "Carrot";
+    gardener.task = "Idle";
+    gardener.pesticideEquipped = true;
+    gardener.target = null;
+    gardener.path = [];
+    gardener.highlightTiles = [];
+    day = 1;
+    harvestedCount = 0;
+    totalPlanted = 0;
+    selectedTile = null;
+    gardenPlants = {};
+    displayActionHistory = [];
+    gameSnapshots = [];
+    Object.assign(resources, { water: 70, seeds: 15, energy: 45, hope: 25, coins: 50 });
+    climateEvents = ["Heat wave", "Rain", "Strong wind"];
+    renderResources();
+    updateClimateQueue(climateEvents);
+    renderGarden();
+    renderActionStack();
+    updateGardenStatus();
+    syncGardenerCropDropdown();
+    renderGardenerStatus();
+    startNaturalPestSystem();
+    setGameMessage("New garden started. Plant your first crop.");
+    showToast("Garden reset.");
+}
+
+/* =========================================================
+   SHOP
+   ========================================================= */
+
+function buySeeds() {
+    if (resources.coins < 10) return showToast("You need 10 coins.");
+    if (resources.seeds >= MAX.seeds) return showToast("Your seed storage is full.");
+    saveSnapshot("Buy 5 seeds");
+    resources.coins -= 10;
+    resources.seeds = Math.min(MAX.seeds, resources.seeds + 5);
+    pushAction("Buy 5 seeds (-10 coins)");
+    renderResources();
+    setGameMessage("Bought 5 seeds for 10 coins.");
+    syncPythonAction("Buy 5 seeds");
+    saveGame(false);
+}
+
+/* =========================================================
+   PYODIDE / STUDENT CODE
+   ========================================================= */
+
+function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = String(value);
+    return div.innerHTML;
+}
+
+function setConsole(message, kind = "normal") {
+    const consoleElement = document.getElementById("output-console");
+    if (!consoleElement) return;
+    const color = kind === "error" ? "text-red-400" : kind === "ok" ? "text-emerald-400" : "text-amber-400";
+    consoleElement.innerHTML = `<span class="${color}">${escapeHtml(message)}</span>`;
+}
+
+function appendConsole(message, kind = "normal") {
+    const consoleElement = document.getElementById("output-console");
+    if (!consoleElement) return;
+    const span = document.createElement("div");
+    span.className = kind === "error" ? "text-red-400" : "text-emerald-200";
+    span.textContent = message;
+    consoleElement.appendChild(span);
+    consoleElement.scrollTop = consoleElement.scrollHeight;
+}
+
+function syncPythonAction(action) {
+    if (!pyodideInstance) return;
+    try {
+        pyodideInstance.runPython(`\ntry:\n    record_game_action(${JSON.stringify(String(action))})\nexcept NameError:\n    pass\n`);
+    } catch (_) {}
+}
+
+function popPythonAction() {
+    if (!pyodideInstance) return;
+    try { pyodideInstance.runPython(`\ntry:\n    pop_game_action()\nexcept NameError:\n    pass\n`); } catch (_) {}
+}
+
+async function initPyodide() {
+    if (pyodideInstance) return pyodideInstance;
+    setConsole("Loading Python...");
+    pyodideInstance = await loadPyodide({
+        stdout: message => appendConsole(message),
+        stderr: message => appendConsole(message, "error")
+    });
+
+    pyodideInstance.globals.set("addPlantToGrid", addPlantToGrid);
+    pyodideInstance.globals.set("removePlantFromGrid", removePlantFromGrid);
+    pyodideInstance.globals.set("popAction", popAction);
+    pyodideInstance.globals.set("updateResources", updateResources);
+    pyodideInstance.globals.set("addPlantsToDropdown", addPlantsToDropdown);
+    pyodideInstance.globals.set("pushAction", pushAction);
+    pyodideInstance.globals.set("updateClimateQueue", updateClimateQueue);
+
+    await pyodideInstance.runPythonAsync(`
+if "game_action_stack" not in globals():
+    game_action_stack = []
+
+def record_game_action(action):
+    game_action_stack.append(action)
+
+def pop_game_action():
+    if game_action_stack:
+        return game_action_stack.pop()
+    return None
+`);
+
+    setConsole("Python ready. Game actions can be linked to the stack.", "ok");
+    return pyodideInstance;
+}
+
+async function runPythonCode() {
+    const button = document.getElementById("run-button");
+    if (button) button.disabled = true;
+    setConsole("Running...");
+
+    try {
+        const py = await initPyodide();
+        const code = document.getElementById("code-editor").value;
+        const result = await py.runPythonAsync(code);
+        if (result !== undefined && result !== null) appendConsole(String(result), "ok");
+        appendConsole("Execution finished.", "ok");
+    } catch (err) {
+        appendConsole(`${err.name || "Error"}: ${err.message || err}`, "error");
+    } finally {
+        if (button) button.disabled = false;
+    }
+}
+
+function loadTopic() {
+    const select = document.getElementById("topic-selector");
+    if (!select || !window.__topicTemplates) return;
+    currentTopic = select.value;
+    const template = window.__topicTemplates[currentTopic];
+    if (template) document.getElementById("code-editor").value = template.code;
+}
+
+function switchTab(tab) {
+    const game = document.getElementById("view-game");
+    const code = document.getElementById("view-code");
+    const gameTab = document.getElementById("tab-game");
+    const codeTab = document.getElementById("tab-code");
+
+    game.classList.toggle("hidden", tab !== "game");
+    code.classList.toggle("hidden", tab !== "code");
+    gameTab.classList.toggle("bg-[#283623]", tab === "game");
+    gameTab.classList.toggle("text-emerald-100", tab === "game");
+    codeTab.classList.toggle("bg-[#283623]", tab === "code");
+    codeTab.classList.toggle("text-emerald-100", tab === "code");
+
+    if (tab === "code") document.getElementById("code-editor")?.focus();
+}
+
+/* =========================================================
+   UI HELPERS
+   ========================================================= */
+
+function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "fixed bottom-6 right-6 bg-emerald-900 border border-emerald-400 text-white px-5 py-3 rounded-2xl shadow-2xl z-50 text-sm";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+}
+
+function populateTopics() {
+    const select = document.getElementById("topic-selector");
+    if (!select || !window.__topicTemplates) return;
+    select.innerHTML = "";
+    Object.entries(window.__topicTemplates).forEach(([key, value]) => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = value.title;
+        select.appendChild(option);
+    });
+    select.value = "1";
+    loadTopic();
+}
+
+function exposeTopicTemplates() {
+    // The original file declares `topicTemplates` before this runtime. Make it
+    // accessible to the runtime without changing the educational source data.
+    if (typeof topicTemplates !== "undefined") window.__topicTemplates = topicTemplates;
+}
+
+/* =========================================================
+   EVENT LISTENERS / STARTUP
+   ========================================================= */
+
+window.addEventListener("load", () => {
+    const badge = document.getElementById("version-badge");
+    if (badge) badge.textContent = `v${APP_VERSION}`;
+
+    exposeTopicTemplates();
+    populateTopics();
+    initializeCropDropdown();
+    syncGardenerCropDropdown();
+
+    const restored = loadGame();
+    if (restored) {
+        setGameMessage("Saved garden restored. Keep growing and watch crop sizes at harvest!");
+    } else {
+        renderResources();
+        setGameMessage("Plant, water, advance the day, and harvest mature crops.");
+    }
+
+    updateClimateQueue(climateEvents);
+    renderGarden();
+    renderActionStack();
+    updateGardenStatus();
+    syncGardenerCropDropdown();
+    renderGardenerStatus();
+
+    document.getElementById("water-button")?.addEventListener("click", waterSelected);
+    document.getElementById("harvest-button")?.addEventListener("click", harvestSelected);
+    document.getElementById("next-day-button")?.addEventListener("click", nextDay);
+    document.getElementById("buy-seeds-button")?.addEventListener("click", buySeeds);
+    document.getElementById("save-game-button")?.addEventListener("click", () => saveGame(true));
+    document.getElementById("reset-game-button")?.addEventListener("click", resetGame);
+    document.getElementById("undo-button")?.addEventListener("click", triggerUndo);
+
+    syncGardenerCropDropdown();
+    document.getElementById("gardener-crop-selector")?.addEventListener("change", event => {
+        gardener.crop = event.target.value;
+        renderGardenerStatus();
+        saveGame(false);
+    });
+    document.getElementById("gardener-toggle")?.addEventListener("click", toggleGardener);
+    document.getElementById("gardener-path")?.addEventListener("click", gardenerFindPathToSelected);
+    document.getElementById("gardener-mature")?.addEventListener("click", gardenerFindNearestMature);
+    document.getElementById("gardener-irrigate")?.addEventListener("click", gardenerIrrigateArea);
+    if (gardener.active) {
+        gardener.autoTimer = setInterval(gardenerPerformTask, 1000);
+    }
+
+    startNaturalPestSystem();
+
+    document.getElementById("restart-python")?.addEventListener("click", async () => {
+        pyodideInstance = null;
+        setConsole("Restarting Python...");
+        try {
+            await initPyodide();
+            showToast("Python restarted.");
+        } catch (err) {
+            appendConsole(`Restart failed: ${err.message}`, "error");
+        }
+    });
+
+    document.getElementById("code-editor")?.addEventListener("keydown", event => {
+        if (event.ctrlKey && event.key === "Enter") {
+            event.preventDefault();
+            runPythonCode();
+        }
+    });
+
+    lucide.createIcons();
+
+    // Periodically save without interrupting gameplay.
+    clearInterval(autoSaveTimer);
+    autoSaveTimer = setInterval(() => saveGame(false), 15000);
+});
+
+</script>
+
+</body>
+</html>
