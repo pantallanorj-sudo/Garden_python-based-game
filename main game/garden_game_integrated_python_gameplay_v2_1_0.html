@@ -653,6 +653,134 @@ textarea:focus-visible {
                 <div id="maturity-tree-result" class="mt-3 border-l-4 border-amber-400 bg-[#172416] p-3 text-xs text-emerald-100" aria-live="polite">The tree is ready to analyze your garden.</div>
             </section>
 
+            <!-- PYTHON-CONCEPT GAMEPLAY TOOLS -->
+            <section id="garden-algorithm-hub" class="mt-6 border-4 border-[#161616] bg-[#273b20] p-4 shadow-[5px_5px_0_#0b0b0b]">
+                <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+                    <div>
+                        <h3 class="font-black text-amber-300 text-base">🧠 Garden Intelligence Console</h3>
+                        <p class="text-xs text-emerald-100 mt-1">Playable game tools built around the Python concepts in the Student Code Editor.</p>
+                    </div>
+                    <span class="text-[10px] border-2 border-black bg-[#405d2c] px-2 py-1 text-emerald-100">LIVE GARDEN DATA</span>
+                </div>
+                <p class="text-[10px] text-emerald-200/75 mb-4">These tools analyze your current 5×5 garden. Search, routing, and sorting are read-only; the Dynamic Programming watering plan can apply real watering actions and spend resources.</p>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-3">
+                    <!-- Topic 13: Hash Table -->
+                    <article class="border-2 border-black bg-[#1b2b18] p-3">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <h4 class="text-xs font-black text-lime-300">13 · 🗂️ Plot Index (Hash Table)</h4>
+                            <button type="button" data-python-topic="13" class="algo-open-lesson text-[9px] bg-[#3b3b3b] px-2 py-1 text-emerald-100">Python lesson ↗</button>
+                        </div>
+                        <p class="text-[10px] text-emerald-200/70 mb-2">Look up a plot directly or find every plot holding a crop. The index uses buckets, chaining, and automatic rehashing.</p>
+                        <div class="flex gap-2">
+                            <input id="hash-query" type="text" value="plot-13" placeholder="plot-13 or Tomato" class="min-w-0 flex-1 bg-[#101810] border-2 border-black px-2 py-2 text-xs text-white">
+                            <button id="hash-lookup-btn" type="button" class="bg-[#477a32] px-3 py-2 text-[10px] font-bold text-white">LOOK UP</button>
+                        </div>
+                        <div id="hash-summary" class="text-[10px] text-lime-200 mt-2" aria-live="polite">Building the plot index…</div>
+                        <div id="hash-result" class="text-[10px] text-emerald-100 mt-2 min-h-[30px]" aria-live="polite">Try plot-13 or enter a crop name.</div>
+                        <div id="hash-buckets" class="mt-2 grid grid-cols-2 gap-1 text-[9px] max-h-32 overflow-auto"></div>
+                    </article>
+
+                    <!-- Topic 14: Graph + BFS / DFS -->
+                    <article class="border-2 border-black bg-[#1b2b18] p-3">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <h4 class="text-xs font-black text-cyan-300">14 · 🕸️ Garden Network (Graph)</h4>
+                            <button type="button" data-python-topic="14" class="algo-open-lesson text-[9px] bg-[#3b3b3b] px-2 py-1 text-emerald-100">Python lesson ↗</button>
+                        </div>
+                        <p class="text-[10px] text-emerald-200/70 mb-2">Every plot is a vertex; neighboring plots are connected by edges. Explore the network from the gardener's current position.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="graph-bfs-btn" type="button" class="bg-[#245b78] px-3 py-2 text-[10px] font-bold text-white">▶ BFS SWEEP</button>
+                            <button id="graph-dfs-btn" type="button" class="bg-[#59437a] px-3 py-2 text-[10px] font-bold text-white">▶ DFS SWEEP</button>
+                        </div>
+                        <div id="graph-summary" class="text-[10px] text-cyan-200 mt-2">25 vertices · 40 undirected edges · 4-direction connections</div>
+                        <div id="graph-result" class="text-[10px] text-emerald-100 mt-2 min-h-[42px]" aria-live="polite">Run BFS or DFS to highlight the visit order on the garden grid.</div>
+                    </article>
+
+                    <!-- Topic 15: Sorting -->
+                    <article class="border-2 border-black bg-[#1b2b18] p-3">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <h4 class="text-xs font-black text-amber-300">15 · ↕ Crop Sorting Bench</h4>
+                            <button type="button" data-python-topic="15" class="algo-open-lesson text-[9px] bg-[#3b3b3b] px-2 py-1 text-emerald-100">Python lesson ↗</button>
+                        </div>
+                        <p class="text-[10px] text-emerald-200/70 mb-2">Sort the crops currently planted in your garden and compare the algorithms' work.</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <select id="sort-key" class="bg-[#101810] border-2 border-black px-2 py-2 text-[10px] text-white">
+                                <option value="maturity">Maturity · low to high</option>
+                                <option value="health">Health · low to high</option>
+                                <option value="value">Base value · low to high</option>
+                            </select>
+                            <select id="sort-method" class="bg-[#101810] border-2 border-black px-2 py-2 text-[10px] text-white">
+                                <option value="merge">Merge Sort</option>
+                                <option value="bubble">Bubble Sort</option>
+                                <option value="selection">Selection Sort</option>
+                            </select>
+                        </div>
+                        <button id="sort-run-btn" type="button" class="mt-2 bg-[#8a6828] px-3 py-2 text-[10px] font-bold text-white">SORT MY CROPS</button>
+                        <div id="sort-result" class="mt-2 text-[10px] text-emerald-100 min-h-[55px]" aria-live="polite">Choose a sort method to order your live crop list.</div>
+                    </article>
+
+                    <!-- Topic 16: Search -->
+                    <article class="border-2 border-black bg-[#1b2b18] p-3">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <h4 class="text-xs font-black text-violet-300">16 · 🔎 Crop Finder (Search)</h4>
+                            <button type="button" data-python-topic="16" class="algo-open-lesson text-[9px] bg-[#3b3b3b] px-2 py-1 text-emerald-100">Python lesson ↗</button>
+                        </div>
+                        <p class="text-[10px] text-emerald-200/70 mb-2">Search your planted crops by name. Compare scanning each crop against binary search on a sorted list.</p>
+                        <div class="flex gap-2">
+                            <input id="crop-search-query" type="text" placeholder="e.g. Tomato" class="min-w-0 flex-1 bg-[#101810] border-2 border-black px-2 py-2 text-xs text-white">
+                            <button id="search-linear-btn" type="button" class="bg-[#245b78] px-2 py-2 text-[9px] font-bold text-white">LINEAR</button>
+                            <button id="search-binary-btn" type="button" class="bg-[#59437a] px-2 py-2 text-[9px] font-bold text-white">BINARY</button>
+                        </div>
+                        <div id="search-result" class="mt-2 text-[10px] text-emerald-100 min-h-[50px]" aria-live="polite">Enter a crop name, then choose a search method.</div>
+                    </article>
+
+                    <!-- Topic 17: Dijkstra -->
+                    <article class="border-2 border-black bg-[#1b2b18] p-3">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <h4 class="text-xs font-black text-orange-300">17 · 🧭 Weighted Route Planner (Dijkstra)</h4>
+                            <button type="button" data-python-topic="17" class="algo-open-lesson text-[9px] bg-[#3b3b3b] px-2 py-1 text-emerald-100">Python lesson ↗</button>
+                        </div>
+                        <p class="text-[10px] text-emerald-200/70 mb-2">Find the lowest-cost route from the gardener to a mature crop. Occupied plots add cost; pest plots add an extra penalty.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="dijkstra-plan-btn" type="button" class="bg-[#8a5624] px-3 py-2 text-[10px] font-bold text-white">FIND LOWEST-COST ROUTE</button>
+                            <button id="dijkstra-dispatch-btn" type="button" disabled class="bg-[#477a32] px-3 py-2 text-[10px] font-bold text-white disabled:opacity-40">SEND GARDENER + HARVEST</button>
+                        </div>
+                        <div id="dijkstra-result" class="mt-2 text-[10px] text-emerald-100 min-h-[58px]" aria-live="polite">Plan a route when at least one crop is mature.</div>
+                    </article>
+
+                    <!-- Topic 18: Dynamic Programming -->
+                    <article class="border-2 border-black bg-[#1b2b18] p-3">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <h4 class="text-xs font-black text-blue-300">18 · 💧 Smart Watering Planner (Dynamic Programming)</h4>
+                            <button type="button" data-python-topic="18" class="algo-open-lesson text-[9px] bg-[#3b3b3b] px-2 py-1 text-emerald-100">Python lesson ↗</button>
+                        </div>
+                        <p class="text-[10px] text-emerald-200/70 mb-2">Choose the best group of crops to water under current water and energy limits. This is a 0/1 knapsack problem.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="dp-plan-btn" type="button" class="bg-[#245b78] px-3 py-2 text-[10px] font-bold text-white">CALCULATE BEST PLAN</button>
+                            <button id="dp-apply-btn" type="button" disabled class="bg-[#477a32] px-3 py-2 text-[10px] font-bold text-white disabled:opacity-40">APPLY WATERING PLAN</button>
+                        </div>
+                        <div id="dp-result" class="mt-2 text-[10px] text-emerald-100 min-h-[70px]" aria-live="polite">The plan will use your current water and energy. Applying it consumes those resources and waters the selected crops.</div>
+                    </article>
+
+                    <!-- Topic 19: Big O -->
+                    <article class="border-2 border-black bg-[#1b2b18] p-3 xl:col-span-2">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <h4 class="text-xs font-black text-rose-300">19 · 📊 Algorithm Observatory (Big O)</h4>
+                            <button type="button" data-python-topic="19" class="algo-open-lesson text-[9px] bg-[#3b3b3b] px-2 py-1 text-emerald-100">Python lesson ↗</button>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <p class="text-[10px] text-emerald-200/70 flex-1">Measure comparison counts using the actual 25 garden plots. Big O describes how work grows as input size increases.</p>
+                            <button id="complexity-run-btn" type="button" class="bg-[#784052] px-3 py-2 text-[10px] font-bold text-white">MEASURE GARDEN ALGORITHMS</button>
+                        </div>
+                        <div id="complexity-result" class="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-2 text-[10px] text-emerald-100" aria-live="polite">
+                            <div class="bg-[#101810] border border-black p-2">Linear Search<br><b>O(n)</b> · waiting</div>
+                            <div class="bg-[#101810] border border-black p-2">Binary Search<br><b>O(log n)</b> · waiting</div>
+                            <div class="bg-[#101810] border border-black p-2">Selection Sort<br><b>O(n²)</b> · waiting</div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
         </div>
 
 
@@ -919,7 +1047,7 @@ textarea:focus-visible {
 
 <script>
 
-const APP_VERSION = "1.9.0";
+const APP_VERSION = "2.1.0";
 
 
 /* =========================================================
@@ -1655,32 +1783,473 @@ print("BST insert/search/inorder demonstrated. Rebuild after changing a key.")`
 
     "13": {
         title: "Topic 13: Hash Tables, Collisions, & Rehashing",
-        code: ""
+        code: `# Topic 13: Hash Tables, Collisions, & Rehashing
+# The hash table stores the current status of all 25 garden plots.
+import json
+
+garden = json.loads(getGardenSnapshot())
+
+class GardenHashTable:
+    def __init__(self, capacity=4):
+        self.capacity = capacity
+        self.buckets = [[] for _ in range(capacity)]
+        self.size = 0
+        self.collisions = 0
+        self.rehashes = 0
+
+    def _index(self, key):
+        # A simple deterministic hash function for learning purposes.
+        return sum(ord(char) for char in str(key)) % self.capacity
+
+    def insert(self, key, value):
+        index = self._index(key)
+        bucket = self.buckets[index]
+        for position, (old_key, old_value) in enumerate(bucket):
+            if old_key == key:
+                bucket[position] = (key, value)
+                return
+        if bucket:
+            self.collisions += 1
+        bucket.append((key, value))
+        self.size += 1
+        if self.size / self.capacity > 0.75:
+            self.rehash()
+
+    def search(self, key):
+        index = self._index(key)
+        for old_key, value in self.buckets[index]:
+            if old_key == key:
+                return value
+        return None
+
+    def rehash(self):
+        old_entries = [entry for bucket in self.buckets for entry in bucket]
+        self.capacity *= 2
+        self.buckets = [[] for _ in range(self.capacity)]
+        self.size = 0
+        self.rehashes += 1
+        for key, value in old_entries:
+            index = self._index(key)
+            self.buckets[index].append((key, value))
+            self.size += 1
+
+
+garden_index = GardenHashTable()
+for plot in garden["tiles"]:
+    key = f'plot-{plot["tile"]}'
+    garden_index.insert(key, plot)
+
+print("GARDEN HASH TABLE")
+print(f"Plots indexed: {garden_index.size}")
+print(f"Bucket capacity after rehashing: {garden_index.capacity}")
+print(f"Collisions handled: {garden_index.collisions}")
+print(f"Rehash operations: {garden_index.rehashes}")
+
+lookup = garden_index.search("plot-13")
+print("\nLookup plot-13:", lookup)
+print("Average lookup: O(1); worst case with many collisions: O(n).")`
     },
     "14": {
         title: "Topic 14: Graph Foundations, Adjacency Lists, DFS & BFS",
-        code: ""
+        code: `# Topic 14: Graph Foundations, Adjacency Lists, DFS & BFS
+# Each garden plot is a graph vertex. Orthogonal neighboring plots are edges.
+import json
+from collections import deque
+
+garden = json.loads(getGardenSnapshot())
+ROWS = COLS = 5
+VERTICES = ROWS * COLS
+
+def neighbors(tile):
+    row, col = divmod(tile, COLS)
+    result = []
+    for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        nr, nc = row + dr, col + dc
+        if 0 <= nr < ROWS and 0 <= nc < COLS:
+            result.append(nr * COLS + nc)
+    return result
+
+# Adjacency list: every plot stores the plots directly beside it.
+graph = {tile: neighbors(tile) for tile in range(VERTICES)}
+
+def bfs(start):
+    queue = deque([start])
+    visited = {start}
+    order = []
+    while queue:
+        current = queue.popleft()
+        order.append(current + 1)
+        for nxt in graph[current]:
+            if nxt not in visited:
+                visited.add(nxt)
+                queue.append(nxt)
+    return order
+
+def dfs(start):
+    stack = [start]
+    visited = set()
+    order = []
+    while stack:
+        current = stack.pop()
+        if current in visited:
+            continue
+        visited.add(current)
+        order.append(current + 1)
+        # Reverse to visit directions in a consistent order.
+        for nxt in reversed(graph[current]):
+            if nxt not in visited:
+                stack.append(nxt)
+    return order
+
+start = garden["gardener_position"]
+print("GARDEN GRAPH")
+print("Vertices:", VERTICES)
+print("Edges:", sum(len(items) for items in graph.values()) // 2)
+print("Neighbors of gardener plot:", [tile + 1 for tile in graph[start]])
+print("\nBFS visit order:", bfs(start))
+print("DFS visit order:", dfs(start))
+
+mature_tiles = {plant["tile"] - 1 for plant in garden["plants"] if plant["is_mature"]}
+queue = deque([(start, [start + 1])])
+visited = {start}
+nearest_path = None
+while queue:
+    current, path = queue.popleft()
+    if current in mature_tiles:
+        nearest_path = path
+        break
+    for nxt in graph[current]:
+        if nxt not in visited:
+            visited.add(nxt)
+            queue.append((nxt, path + [nxt + 1]))
+print("\nNearest mature-crop path:", nearest_path or "No mature crop is planted yet.")
+print("BFS and DFS both run in O(V + E) time with an adjacency list.")`
     },
     "15": {
         title: "Topic 15: Sorting Algorithms",
-        code: ""
+        code: `# Topic 15: Sorting Algorithms
+# Sort the crops currently planted in the game by maturity percentage.
+import json
+
+garden = json.loads(getGardenSnapshot())
+crops = garden["plants"]
+
+def bubble_sort(items):
+    result = items[:]
+    comparisons = 0
+    for end in range(len(result) - 1, 0, -1):
+        swapped = False
+        for index in range(end):
+            comparisons += 1
+            if result[index]["maturity"] > result[index + 1]["maturity"]:
+                result[index], result[index + 1] = result[index + 1], result[index]
+                swapped = True
+        if not swapped:
+            break
+    return result, comparisons
+
+def selection_sort(items):
+    result = items[:]
+    comparisons = 0
+    for start in range(len(result)):
+        smallest = start
+        for index in range(start + 1, len(result)):
+            comparisons += 1
+            if result[index]["maturity"] < result[smallest]["maturity"]:
+                smallest = index
+        result[start], result[smallest] = result[smallest], result[start]
+    return result, comparisons
+
+def merge_sort(items):
+    if len(items) <= 1:
+        return items[:]
+    middle = len(items) // 2
+    left = merge_sort(items[:middle])
+    right = merge_sort(items[middle:])
+    merged = []
+    left_index = right_index = 0
+    while left_index < len(left) and right_index < len(right):
+        if left[left_index]["maturity"] <= right[right_index]["maturity"]:
+            merged.append(left[left_index])
+            left_index += 1
+        else:
+            merged.append(right[right_index])
+            right_index += 1
+    return merged + left[left_index:] + right[right_index:]
+
+def show(items):
+    if not items:
+        print("No crops planted yet. Plant crops, then run this lesson again.")
+        return
+    for plant in items:
+        print(f'Plot {plant["tile"]:>2}: {plant["name"]:<12} {plant["maturity"]:>3}% mature')
+
+print("CROPS SORTED BY MATURITY — LEAST TO MOST")
+bubble_result, bubble_checks = bubble_sort(crops)
+selection_result, selection_checks = selection_sort(crops)
+merge_result = merge_sort(crops)
+show(merge_result)
+print("\nComparison counts:")
+print("Bubble sort:", bubble_checks)
+print("Selection sort:", selection_checks)
+print("Merge sort: divide-and-conquer implementation")
+print("Typical complexity: Bubble/Selection O(n^2); Merge O(n log n).")`
     },
     "16": {
         title: "Topic 16: Searching — Linear vs. Binary Search",
-        code: ""
+        code: `# Topic 16: Searching — Linear vs. Binary Search
+# Find a crop in the current garden, then compare two search strategies.
+import json
+
+garden = json.loads(getGardenSnapshot())
+crops = garden["plants"]
+
+# Change this value to search for another crop name.
+target = crops[0]["name"] if crops else "Tomato"
+
+def linear_search(items, target):
+    checks = 0
+    for item in items:
+        checks += 1
+        if item["name"].lower() == target.lower():
+            return item, checks
+    return None, checks
+
+def binary_search(items, target):
+    # Binary search requires the data to be sorted first.
+    ordered = sorted(items, key=lambda item: item["name"].lower())
+    low, high = 0, len(ordered) - 1
+    checks = 0
+    while low <= high:
+        middle = (low + high) // 2
+        checks += 1
+        current = ordered[middle]["name"].lower()
+        if current == target.lower():
+            return ordered[middle], checks
+        if current < target.lower():
+            low = middle + 1
+        else:
+            high = middle - 1
+    return None, checks
+
+if not crops:
+    print("No crops planted yet. Plant a crop and run this lesson again.")
+else:
+    linear_match, linear_checks = linear_search(crops, target)
+    binary_match, binary_checks = binary_search(crops, target)
+    print("Target crop:", target)
+    print("Linear search result:", linear_match)
+    print("Linear comparisons:", linear_checks)
+    print("Binary search result:", binary_match)
+    print("Binary comparisons:", binary_checks)
+    print("Linear search: O(n). Binary search: O(log n), after sorting.")`
     },
     "17": {
         title: "Topic 17: Dijkstra’s Algorithm & Greedy Patterns",
-        code: ""
+        code: `# Topic 17: Dijkstra's Algorithm & Greedy Patterns
+# Find a minimum-cost route from the gardener to a mature crop.
+import json
+import heapq
+
+garden = json.loads(getGardenSnapshot())
+ROWS = COLS = 5
+
+def neighbors(tile):
+    row, col = divmod(tile, COLS)
+    result = []
+    for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        nr, nc = row + dr, col + dc
+        if 0 <= nr < ROWS and 0 <= nc < COLS:
+            result.append(nr * COLS + nc)
+    return result
+
+plot_by_tile = {plot["tile"] - 1: plot for plot in garden["tiles"]}
+
+def travel_cost(tile):
+    # Occupied or pest-affected plots cost more to cross in this model.
+    plot = plot_by_tile[tile]
+    cost = 1
+    if plot["crop"] != "Empty":
+        cost += 1
+    if plot["has_pest"]:
+        cost += 3
+    return cost
+
+def dijkstra(start):
+    distances = {tile: float("inf") for tile in range(25)}
+    previous = {}
+    distances[start] = 0
+    priority_queue = [(0, start)]
+    while priority_queue:
+        current_cost, current = heapq.heappop(priority_queue)
+        if current_cost != distances[current]:
+            continue
+        for nxt in neighbors(current):
+            new_cost = current_cost + travel_cost(nxt)
+            if new_cost < distances[nxt]:
+                distances[nxt] = new_cost
+                previous[nxt] = current
+                heapq.heappush(priority_queue, (new_cost, nxt))
+    return distances, previous
+
+def build_path(previous, start, target):
+    path = [target]
+    while path[-1] != start:
+        parent = previous.get(path[-1])
+        if parent is None:
+            return []
+        path.append(parent)
+    return [tile + 1 for tile in reversed(path)]
+
+start = garden["gardener_position"]
+targets = [plant["tile"] - 1 for plant in garden["plants"] if plant["is_mature"]]
+if not targets:
+    print("No mature crops are available as a destination yet.")
+else:
+    distances, previous = dijkstra(start)
+    best_target = min(targets, key=lambda tile: distances[tile])
+    print("Gardener starts at plot:", start + 1)
+    print("Dijkstra destination:", best_target + 1)
+    print("Lowest travel cost:", distances[best_target])
+    print("Minimum-cost path:", build_path(previous, start, best_target))
+
+    # Greedy comparison: choose the target with the smallest Manhattan distance.
+    def manhattan(tile_a, tile_b):
+        ra, ca = divmod(tile_a, COLS)
+        rb, cb = divmod(tile_b, COLS)
+        return abs(ra - rb) + abs(ca - cb)
+    greedy_target = min(targets, key=lambda tile: manhattan(start, tile))
+    print("\nGreedy nearest-by-distance target:", greedy_target + 1)
+    print("Greedy distance:", manhattan(start, greedy_target))
+    print("Dijkstra considers accumulated travel cost; a greedy choice uses a local rule.")`
     },
     "18": {
         title: "Topic 18: Dynamic Programming & Memoization",
-        code: ""
+        code: `# Topic 18: Dynamic Programming & Memoization
+# Choose which growing crops to water with the resources currently available.
+# This is a 0/1 knapsack problem solved with memoization.
+import json
+from functools import lru_cache
+
+garden = json.loads(getGardenSnapshot())
+water_budget = int(garden["resources"]["water"])
+energy_actions = int(garden["resources"]["energy"] // 2)
+
+candidates = []
+for plant in garden["plants"]:
+    if plant["is_mature"] or plant["hydration_days"] > 0:
+        continue
+    estimated_value = max(1, round(plant["sell_value"] * plant["health"] / 100))
+    candidates.append({
+        "name": plant["name"],
+        "tile": plant["tile"],
+        "water": plant["water_cost"],
+        "value": estimated_value
+    })
+
+@lru_cache(maxsize=None)
+def best_plan(index, water_left, actions_left):
+    if index == len(candidates) or actions_left == 0:
+        return 0, ()
+    # Option 1: do not water this crop.
+    best_value, best_items = best_plan(index + 1, water_left, actions_left)
+    # Option 2: water it, if both resources can cover the action.
+    crop = candidates[index]
+    if crop["water"] <= water_left:
+        value, items = best_plan(index + 1, water_left - crop["water"], actions_left - 1)
+        value += crop["value"]
+        if value > best_value:
+            best_value, best_items = value, (index,) + items
+    return best_value, best_items
+
+if not candidates:
+    print("No crops currently need watering. All growing crops are hydrated or the garden is empty.")
+else:
+    total_value, selected = best_plan(0, water_budget, energy_actions)
+    chosen = [candidates[index] for index in selected]
+    water_used = sum(item["water"] for item in chosen)
+    print("RESOURCE-AWARE WATERING PLAN")
+    print("Available water:", water_budget, "L")
+    print("Available watering actions from energy:", energy_actions)
+    print("Selected crops:")
+    for item in chosen:
+        print(f'  Plot {item["tile"]}: {item["name"]} — {item["water"]} L, estimated value {item["value"]}')
+    print("Total water planned:", water_used, "L")
+    print("Estimated value score:", total_value)
+    print("Memoized states calculated:", best_plan.cache_info().currsize)
+    print("DP avoids recalculating the same (crop, water, energy) state.")`
     },
     "19": {
         title: "Topic 19: Big O Notation & Algorithm Efficiency",
-        code: ""
-    },
+        code: `# Topic 19: Big O Notation & Algorithm Efficiency
+# Use the actual 25-plot garden to count operations in simple algorithms.
+import json
+
+garden = json.loads(getGardenSnapshot())
+plots = garden["tiles"]
+
+# Linear search: inspect each plot until the target tile is found.
+def linear_search(items, target_tile):
+    checks = 0
+    for item in items:
+        checks += 1
+        if item["tile"] == target_tile:
+            return item, checks
+    return None, checks
+
+# Binary search: the tile list is already ordered by tile number.
+def binary_search(items, target_tile):
+    low, high = 0, len(items) - 1
+    checks = 0
+    while low <= high:
+        middle = (low + high) // 2
+        checks += 1
+        if items[middle]["tile"] == target_tile:
+            return items[middle], checks
+        if items[middle]["tile"] < target_tile:
+            low = middle + 1
+        else:
+            high = middle - 1
+    return None, checks
+
+# Count comparisons for selection sort on actual plot numbers.
+def selection_sort_count(values):
+    result = values[:]
+    checks = 0
+    for start in range(len(result)):
+        smallest = start
+        for index in range(start + 1, len(result)):
+            checks += 1
+            if result[index] < result[smallest]:
+                smallest = index
+        result[start], result[smallest] = result[smallest], result[start]
+    return result, checks
+
+target = 25
+linear_result, linear_checks = linear_search(plots, target)
+binary_result, binary_checks = binary_search(plots, target)
+_, sort_checks = selection_sort_count([plot["tile"] for plot in reversed(plots)])
+vertices = len(plots)
+edges = 40  # A 5x5 grid has 20 horizontal + 20 vertical undirected edges.
+
+print("LIVE GARDEN SIZE")
+print("Plots / vertices:", vertices)
+print("Grid edges:", edges)
+print("\nMEASURED OPERATIONS — SEARCH FOR PLOT 25")
+print("Linear search comparisons:", linear_checks)
+print("Binary search comparisons:", binary_checks)
+print("Selection sort comparisons:", sort_checks)
+print("\nBIG O QUICK GUIDE")
+print("O(1)       constant — direct list/dictionary access")
+print("O(log n)   logarithmic — binary search")
+print("O(n)       linear — scan every plot")
+print("O(n log n) efficient comparison sorting — merge sort")
+print("O(n^2)     quadratic — selection/bubble sort")
+print("O(V + E)   graph traversal — BFS / DFS")
+print("O((V+E) log V) — Dijkstra with a priority queue")
+print("O(nW)      — 0/1 knapsack dynamic programming")
+print("Measured counts depend on the input; Big O describes growth as input size increases.")`
+    }
 
 };
 
@@ -2970,6 +3539,7 @@ function renderGarden() {
         const cropCount = Object.keys(gardenPlants).filter(tile => gardenPlants[tile]).length;
         maturityCount.textContent = `${cropCount} crop${cropCount === 1 ? "" : "s"} in garden`;
     }
+    if (typeof rebuildGardenHashIndex === "function") rebuildGardenHashIndex();
 }
 
 function updateGardenerRenderState() {
@@ -3468,6 +4038,43 @@ function appendConsole(message, kind = "normal") {
     consoleElement.scrollTop = consoleElement.scrollHeight;
 }
 
+function getGardenSnapshot() {
+    const tiles = Array.from({ length: GARDEN_SIZE * GARDEN_SIZE }, (_, tile) => {
+        const plant = gardenPlants[tile] || null;
+        const data = plant ? getPlantData(plant.name) : null;
+        return {
+            tile: tile + 1,
+            crop: plant ? plant.name : "Empty",
+            has_pest: Boolean(plant && plant.pest),
+            maturity: plant && data ? Math.round(Math.min(100, (plant.age / data.grow) * 100)) : 0,
+            health: plant ? Number(plant.health) || 0 : 0
+        };
+    });
+    const plants = Object.entries(gardenPlants).map(([tile, plant]) => {
+        const data = getPlantData(plant.name);
+        return {
+            tile: Number(tile) + 1,
+            name: plant.name,
+            age: Number(plant.age) || 0,
+            grow_days: data.grow,
+            maturity: Math.round(Math.min(100, ((Number(plant.age) || 0) / data.grow) * 100)),
+            is_mature: (Number(plant.age) || 0) >= data.grow,
+            health: Number(plant.health) || 0,
+            hydration_days: Number(plant.hydrationDays) || 0,
+            water_cost: data.water,
+            sell_value: data.sell,
+            category: data.category
+        };
+    });
+    return JSON.stringify({
+        day,
+        gardener_position: Number(gardener.position) || 12,
+        resources: { ...resources },
+        plants,
+        tiles
+    });
+}
+
 function syncPythonAction(action) {
     if (!pyodideInstance) return;
     try {
@@ -3495,6 +4102,7 @@ async function initPyodide() {
     pyodideInstance.globals.set("addPlantsToDropdown", addPlantsToDropdown);
     pyodideInstance.globals.set("pushAction", pushAction);
     pyodideInstance.globals.set("updateClimateQueue", updateClimateQueue);
+    pyodideInstance.globals.set("getGardenSnapshot", getGardenSnapshot);
 
     await pyodideInstance.runPythonAsync(`
 if "game_action_stack" not in globals():
@@ -3585,6 +4193,635 @@ function populateTopics() {
     loadTopic();
 }
 
+
+/* =========================================================
+   PYTHON-CONCEPT GAMEPLAY TOOLS
+   These are the playable game-side counterparts of Topics 13–19.
+   The Student Code Editor contains the corresponding Python implementations.
+   ========================================================= */
+
+let gardenHashIndex = null;
+let pendingDijkstraRoute = null;
+let pendingWateringPlan = null;
+
+function gardenHashCode(key, capacity) {
+    let hash = 0;
+    for (const char of String(key)) hash += char.charCodeAt(0);
+    return hash % capacity;
+}
+
+function createGardenHashIndex() {
+    const table = {
+        capacity: 4,
+        buckets: [],
+        size: 0,
+        collisions: 0,
+        rehashes: 0,
+        insert(key, value, countCollision = true) {
+            const index = gardenHashCode(key, this.capacity);
+            const bucket = this.buckets[index];
+            const existing = bucket.find(entry => entry.key === key);
+            if (existing) {
+                existing.value = value;
+                return;
+            }
+            if (countCollision && bucket.length) this.collisions++;
+            bucket.push({ key, value });
+            this.size++;
+            if (this.size / this.capacity > 0.75) this.rehash();
+        },
+        search(key) {
+            const bucket = this.buckets[gardenHashCode(key, this.capacity)] || [];
+            return bucket.find(entry => entry.key === key)?.value ?? null;
+        },
+        rehash() {
+            const entries = this.buckets.flat();
+            this.capacity *= 2;
+            this.buckets = Array.from({ length: this.capacity }, () => []);
+            this.size = 0;
+            this.rehashes++;
+            entries.forEach(entry => this.insert(entry.key, entry.value, false));
+        }
+    };
+    table.buckets = Array.from({ length: table.capacity }, () => []);
+    return table;
+}
+
+function rebuildGardenHashIndex() {
+    gardenHashIndex = createGardenHashIndex();
+    const cropGroups = new Map();
+
+    for (let tile = 0; tile < 25; tile++) {
+        const plant = gardenPlants[tile] || null;
+        const data = plant ? getPlantData(plant.name) : null;
+        const record = {
+            tile: tile + 1,
+            crop: plant ? plant.name : "Empty",
+            maturity: plant && data ? Math.round(Math.min(100, (plant.age / data.grow) * 100)) : 0,
+            health: plant ? Number(plant.health) || 0 : 0,
+            pest: Boolean(plant && plant.pest)
+        };
+        gardenHashIndex.insert(`plot-${tile + 1}`, record);
+        if (plant) {
+            const key = plant.name.toLowerCase();
+            if (!cropGroups.has(key)) cropGroups.set(key, []);
+            cropGroups.get(key).push(record);
+        }
+    }
+    cropGroups.forEach((records, name) => gardenHashIndex.insert(`crop:${name}`, records));
+
+    const summary = document.getElementById("hash-summary");
+    if (summary) {
+        summary.textContent = `${gardenHashIndex.size} keys indexed · ${gardenHashIndex.capacity} buckets · ${gardenHashIndex.collisions} collision(s) · ${gardenHashIndex.rehashes} rehash(es)`;
+    }
+
+    const buckets = document.getElementById("hash-buckets");
+    if (buckets) {
+        const populated = gardenHashIndex.buckets
+            .map((entries, index) => ({ entries, index }))
+            .filter(bucket => bucket.entries.length);
+        buckets.innerHTML = populated.length
+            ? populated.slice(0, 12).map(({ entries, index }) =>
+                `<div class="bg-[#101810] border border-[#405d2c] p-1 break-words"><b class="text-lime-300">B${index}</b> · ${entries.map(entry => escapeHtml(entry.key)).join(" → ")}</div>`
+              ).join("")
+            : `<div class="text-emerald-300">No buckets yet.</div>`;
+    }
+}
+
+function lookupGardenHash() {
+    if (!gardenHashIndex) rebuildGardenHashIndex();
+    const input = document.getElementById("hash-query");
+    const result = document.getElementById("hash-result");
+    const raw = (input?.value || "").trim();
+    if (!raw) {
+        if (result) result.textContent = "Enter a plot number, plot-13, or crop name.";
+        return;
+    }
+
+    let key;
+    if (/^plot[-\s]?\d+$/i.test(raw)) {
+        const number = Number(raw.match(/\d+/)[0]);
+        key = `plot-${number}`;
+    } else if (/^\d+$/.test(raw)) {
+        key = `plot-${Number(raw)}`;
+    } else {
+        key = `crop:${raw.toLowerCase()}`;
+    }
+
+    const found = gardenHashIndex.search(key);
+    if (!found) {
+        if (result) result.textContent = `No entry found for "${raw}".`;
+        return;
+    }
+
+    if (Array.isArray(found)) {
+        const tiles = found.map(item => item.tile - 1);
+        if (result) result.textContent = `${found.length} ${raw} crop(s) found at ${found.map(item => `Plot ${item.tile}`).join(", ")}.`;
+        setGardenerHighlight(tiles, "ring-lime-300", 4200);
+        return;
+    }
+
+    if (result) {
+        result.textContent = `Plot ${found.tile}: ${found.crop}${found.crop === "Empty" ? "" : ` · ${found.maturity}% mature · ${found.health}% health${found.pest ? " · PEST" : ""}`}.`;
+    }
+    setGardenerHighlight([found.tile - 1], "ring-lime-300", 4200);
+}
+
+function buildGardenAdjacencyList() {
+    const graph = new Map();
+    for (let tile = 0; tile < 25; tile++) {
+        graph.set(tile, getGardenNeighbors(tile));
+    }
+    return graph;
+}
+
+function traverseGardenGraph(start, mode) {
+    const graph = buildGardenAdjacencyList();
+    const visited = new Set();
+    const order = [];
+
+    if (mode === "BFS") {
+        const queue = [start];
+        visited.add(start);
+        let head = 0;
+        while (head < queue.length) {
+            const current = queue[head++];
+            order.push(current);
+            for (const next of graph.get(current)) {
+                if (!visited.has(next)) {
+                    visited.add(next);
+                    queue.push(next);
+                }
+            }
+        }
+    } else {
+        const stack = [start];
+        while (stack.length) {
+            const current = stack.pop();
+            if (visited.has(current)) continue;
+            visited.add(current);
+            order.push(current);
+            const neighbors = graph.get(current);
+            for (let i = neighbors.length - 1; i >= 0; i--) {
+                if (!visited.has(neighbors[i])) stack.push(neighbors[i]);
+            }
+        }
+    }
+    return { order, neighbors: graph.get(start) || [] };
+}
+
+function runGardenGraphTraversal(mode) {
+    const output = document.getElementById("graph-result");
+    const run = traverseGardenGraph(gardener.position, mode);
+    const plotOrder = run.order.map(tile => tile + 1);
+    if (output) {
+        output.textContent = `${mode} starts at Plot ${gardener.position + 1}. First neighbors: ${run.neighbors.map(tile => tile + 1).join(", ")}. Visit order: ${plotOrder.join(" → ")}.`;
+    }
+    setGardenerHighlight(run.order, mode === "BFS" ? "ring-cyan-300" : "ring-violet-300", 5200);
+}
+
+function getLiveCropRecords() {
+    return Object.keys(gardenPlants).map(Number).sort((a, b) => a - b).map(tile => {
+        const plant = gardenPlants[tile];
+        const data = getPlantData(plant.name);
+        return {
+            tile: tile + 1,
+            name: plant.name,
+            maturity: Math.round(Math.min(100, (plant.age / data.grow) * 100)),
+            health: Math.round(Number(plant.health) || 0),
+            value: Number(data.sell) || 0
+        };
+    });
+}
+
+function sortCropRecords(records, method, key) {
+    const result = records.map(item => ({ ...item }));
+    let comparisons = 0;
+    const compare = (a, b) => {
+        comparisons++;
+        const difference = a[key] - b[key];
+        return difference || a.tile - b.tile;
+    };
+
+    if (method === "bubble") {
+        for (let end = result.length - 1; end > 0; end--) {
+            let swapped = false;
+            for (let index = 0; index < end; index++) {
+                if (compare(result[index], result[index + 1]) > 0) {
+                    [result[index], result[index + 1]] = [result[index + 1], result[index]];
+                    swapped = true;
+                }
+            }
+            if (!swapped) break;
+        }
+    } else if (method === "selection") {
+        for (let start = 0; start < result.length; start++) {
+            let smallest = start;
+            for (let index = start + 1; index < result.length; index++) {
+                if (compare(result[index], result[smallest]) < 0) smallest = index;
+            }
+            if (smallest !== start) [result[start], result[smallest]] = [result[smallest], result[start]];
+        }
+    } else {
+        const mergeSort = items => {
+            if (items.length <= 1) return items;
+            const middle = Math.floor(items.length / 2);
+            const left = mergeSort(items.slice(0, middle));
+            const right = mergeSort(items.slice(middle));
+            const merged = [];
+            let a = 0, b = 0;
+            while (a < left.length && b < right.length) {
+                if (compare(left[a], right[b]) <= 0) merged.push(left[a++]);
+                else merged.push(right[b++]);
+            }
+            return merged.concat(left.slice(a), right.slice(b));
+        };
+        return { result: mergeSort(result), comparisons, method: "Merge Sort" };
+    }
+    return { result, comparisons, method: method === "bubble" ? "Bubble Sort" : "Selection Sort" };
+}
+
+function runGardenCropSort() {
+    const records = getLiveCropRecords();
+    const output = document.getElementById("sort-result");
+    if (!records.length) {
+        output.textContent = "No crops are planted yet. Plant crops first, then sort them.";
+        return;
+    }
+
+    const key = document.getElementById("sort-key")?.value || "maturity";
+    const method = document.getElementById("sort-method")?.value || "merge";
+    const result = sortCropRecords(records, method, key);
+    const labels = { maturity: "maturity", health: "health", value: "base value" };
+    const rows = result.result.slice(0, 12).map(item =>
+        `Plot ${item.tile} · ${escapeHtml(item.name)} · ${item[key]}${key === "value" ? " coins" : "%"}`
+    );
+    output.innerHTML = `<div class="text-amber-200 mb-1">${result.method} · ${result.comparisons} comparison(s) · sorted by ${labels[key]}</div><div class="space-y-1">${rows.map(row => `<div class="border-b border-[#405d2c] pb-1">${row}</div>`).join("")}</div>${records.length > 12 ? `<div class="text-emerald-300 mt-1">Showing 12 of ${records.length} crops.</div>` : ""}`;
+}
+
+function searchCropRecords(mode) {
+    const query = (document.getElementById("crop-search-query")?.value || "").trim().toLowerCase();
+    const output = document.getElementById("search-result");
+    const records = getLiveCropRecords();
+    if (!query) {
+        output.textContent = "Enter a crop name first.";
+        return;
+    }
+    if (!records.length) {
+        output.textContent = "There are no planted crops to search.";
+        return;
+    }
+
+    let checks = 0;
+    let match = null;
+    if (mode === "linear") {
+        for (const item of records) {
+            checks++;
+            if (item.name.toLowerCase() === query) {
+                match = item;
+                break;
+            }
+        }
+    } else {
+        const ordered = [...records].sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()) || a.tile - b.tile);
+        let low = 0, high = ordered.length - 1;
+        while (low <= high) {
+            const middle = Math.floor((low + high) / 2);
+            checks++;
+            const current = ordered[middle].name.toLowerCase();
+            if (current === query) {
+                match = ordered[middle];
+                break;
+            }
+            if (current < query) low = middle + 1;
+            else high = middle - 1;
+        }
+    }
+
+    if (!match) {
+        output.textContent = `${mode === "linear" ? "Linear" : "Binary"} search checked ${checks} item(s). No planted crop named "${query}" was found.`;
+        return;
+    }
+    output.textContent = `${mode === "linear" ? "Linear" : "Binary"} search found ${match.name} at Plot ${match.tile} after ${checks} comparison(s). ${mode === "binary" ? "The list was sorted by crop name first." : "The original plot-order list was scanned."}`;
+    setGardenerHighlight([match.tile - 1], "ring-violet-300", 4200);
+}
+
+class GardenMinPriorityQueue {
+    constructor() { this.items = []; }
+    get size() { return this.items.length; }
+    push(entry) {
+        this.items.push(entry);
+        let index = this.items.length - 1;
+        while (index > 0) {
+            const parent = Math.floor((index - 1) / 2);
+            if (this.items[parent][0] <= this.items[index][0]) break;
+            [this.items[parent], this.items[index]] = [this.items[index], this.items[parent]];
+            index = parent;
+        }
+    }
+    pop() {
+        if (!this.items.length) return null;
+        const first = this.items[0];
+        const last = this.items.pop();
+        if (this.items.length) {
+            this.items[0] = last;
+            let index = 0;
+            while (true) {
+                const left = index * 2 + 1;
+                const right = left + 1;
+                let smallest = index;
+                if (left < this.items.length && this.items[left][0] < this.items[smallest][0]) smallest = left;
+                if (right < this.items.length && this.items[right][0] < this.items[smallest][0]) smallest = right;
+                if (smallest === index) break;
+                [this.items[index], this.items[smallest]] = [this.items[smallest], this.items[index]];
+                index = smallest;
+            }
+        }
+        return first;
+    }
+}
+
+function dijkstraGardenRoute(start) {
+    const distances = Array(25).fill(Infinity);
+    const previous = Array(25).fill(null);
+    const priorityQueue = new GardenMinPriorityQueue();
+    distances[start] = 0;
+    priorityQueue.push([0, start]);
+
+    while (priorityQueue.size) {
+        const [currentCost, current] = priorityQueue.pop();
+        if (currentCost !== distances[current]) continue;
+
+        for (const next of getGardenNeighbors(current)) {
+            const plant = gardenPlants[next];
+            const travelCost = 1 + (plant ? 1 : 0) + (plant?.pest ? 3 : 0);
+            const candidate = currentCost + travelCost;
+            if (candidate < distances[next]) {
+                distances[next] = candidate;
+                previous[next] = current;
+                priorityQueue.push([candidate, next]);
+            }
+        }
+    }
+    return { distances, previous };
+}
+
+function reconstructGardenPath(previous, start, target) {
+    const path = [target];
+    while (path[path.length - 1] !== start) {
+        const parent = previous[path[path.length - 1]];
+        if (parent === null || parent === undefined) return [];
+        path.push(parent);
+    }
+    return path.reverse();
+}
+
+function planDijkstraHarvestRoute() {
+    const output = document.getElementById("dijkstra-result");
+    const dispatch = document.getElementById("dijkstra-dispatch-btn");
+    const matureTargets = Object.keys(gardenPlants).map(Number).filter(tile => {
+        const plant = gardenPlants[tile];
+        return plant && plant.age >= getPlantData(plant.name).grow;
+    });
+
+    pendingDijkstraRoute = null;
+    if (dispatch) dispatch.disabled = true;
+    if (!matureTargets.length) {
+        output.textContent = "No mature crops are available yet. Advance the day and care for your crops first.";
+        return;
+    }
+
+    const start = gardener.position;
+    const { distances, previous } = dijkstraGardenRoute(start);
+    matureTargets.sort((a, b) => distances[a] - distances[b] || a - b);
+    const target = matureTargets[0];
+    const path = reconstructGardenPath(previous, start, target);
+    const greedyTarget = matureTargets.slice().sort((a, b) => {
+        const [ar, ac] = tileToRC(a);
+        const [br, bc] = tileToRC(b);
+        const [sr, sc] = tileToRC(start);
+        return (Math.abs(ar - sr) + Math.abs(ac - sc)) - (Math.abs(br - sr) + Math.abs(bc - sc));
+    })[0];
+    const greedyDistance = (() => {
+        const [r1, c1] = tileToRC(start);
+        const [r2, c2] = tileToRC(greedyTarget);
+        return Math.abs(r1 - r2) + Math.abs(c1 - c2);
+    })();
+
+    pendingDijkstraRoute = { target, path, cost: distances[target] };
+    if (dispatch) dispatch.disabled = gardener.busy || gardener.active;
+    const plant = gardenPlants[target];
+    output.textContent = `Gardener at Plot ${start + 1} → ${plant.name} at Plot ${target + 1}. Lowest travel cost: ${distances[target]}. Route: ${path.map(tile => tile + 1).join(" → ")}. Greedy nearest-by-Manhattan would choose Plot ${greedyTarget + 1} (${greedyDistance} steps).`;
+    gardener.target = target;
+    gardener.path = path;
+    gardener.task = "Dijkstra route planned";
+    setGardenerHighlight(path, "ring-orange-300", 5200);
+    renderGardenerStatus();
+}
+
+function dispatchDijkstraHarvest() {
+    if (!pendingDijkstraRoute) return showToast("Calculate a Dijkstra route first.");
+    if (gardener.busy || gardener.active) return showToast("Pause the active gardener before dispatching a weighted route.");
+    const { target, path } = pendingDijkstraRoute;
+    const plant = gardenPlants[target];
+    if (!plant || plant.age < getPlantData(plant.name).grow) {
+        pendingDijkstraRoute = null;
+        document.getElementById("dijkstra-dispatch-btn").disabled = true;
+        return showToast("The destination crop is no longer mature. Recalculate the route.");
+    }
+
+    saveSnapshot(`Dijkstra dispatch to Plot ${target + 1}`);
+    document.getElementById("dijkstra-dispatch-btn").disabled = true;
+    animateGardenerAlongPath(path, "Dijkstra weighted route", () => {
+        gardenerCompleteTask("harvest", target);
+        gardener.target = null;
+        gardener.path = [gardener.position];
+        gardener.task = "Dijkstra harvest complete";
+        pendingDijkstraRoute = null;
+        renderGardenerStatus();
+        renderGarden();
+        document.getElementById("dijkstra-result").textContent = `The gardener followed the weighted route and harvested the crop at Plot ${target + 1}.`;
+        saveGame(false);
+    });
+}
+
+function calculateOptimalWateringPlan() {
+    const candidates = Object.keys(gardenPlants).map(Number).sort((a, b) => a - b).map(tile => {
+        const plant = gardenPlants[tile];
+        const data = getPlantData(plant.name);
+        if (plant.age >= data.grow || plant.hydrationDays > 0 || plant.wateringCount >= data.waterings) return null;
+        return {
+            tile,
+            name: plant.name,
+            water: data.water,
+            value: Math.max(1, Math.round(data.sell * (Number(plant.health) || 0) / 100))
+        };
+    }).filter(Boolean);
+
+    const waterBudget = Math.max(0, Math.floor(resources.water));
+    const actionBudget = Math.max(0, Math.floor(resources.energy / 2));
+    const memo = new Map();
+
+    function bestPlan(index, waterLeft, actionsLeft) {
+        if (index >= candidates.length || actionsLeft <= 0) return { value: 0, picks: [] };
+        const key = `${index}|${waterLeft}|${actionsLeft}`;
+        if (memo.has(key)) return memo.get(key);
+
+        const skip = bestPlan(index + 1, waterLeft, actionsLeft);
+        let best = skip;
+        const crop = candidates[index];
+        if (crop.water <= waterLeft) {
+            const take = bestPlan(index + 1, waterLeft - crop.water, actionsLeft - 1);
+            const candidate = { value: take.value + crop.value, picks: [index, ...take.picks] };
+            if (candidate.value > best.value) best = candidate;
+        }
+        memo.set(key, best);
+        return best;
+    }
+
+    const optimum = bestPlan(0, waterBudget, actionBudget);
+    const selected = optimum.picks.map(index => candidates[index]);
+    pendingWateringPlan = {
+        selected,
+        value: optimum.value,
+        waterUsed: selected.reduce((sum, item) => sum + item.water, 0),
+        memoStates: memo.size,
+        waterBudget,
+        actionBudget
+    };
+
+    const output = document.getElementById("dp-result");
+    const apply = document.getElementById("dp-apply-btn");
+    if (apply) apply.disabled = !selected.length;
+    if (!selected.length) {
+        output.textContent = `No eligible crops can be watered with the current resources. Available: ${waterBudget} L water and ${actionBudget} watering action(s) from energy.`;
+        return;
+    }
+    const rows = selected.map(item => `Plot ${item.tile + 1} · ${escapeHtml(item.name)} · ${item.water} L · value score ${item.value}`).join("<br>");
+    output.innerHTML = `<div class="text-blue-200 mb-1">Optimal set · ${selected.length} crop(s) · ${pendingWateringPlan.waterUsed}/${waterBudget} L water · ${pendingWateringPlan.value} estimated value score</div><div>${rows}</div><div class="text-emerald-300 mt-1">Memoized states: ${memo.size} · energy supports ${actionBudget} action(s)</div>`;
+}
+
+function applyOptimalWateringPlan() {
+    if (!pendingWateringPlan || !pendingWateringPlan.selected.length) return showToast("Calculate a watering plan first.");
+    const selected = pendingWateringPlan.selected;
+    const plannedWater = selected.reduce((sum, item) => sum + item.water, 0);
+    const eligible = plannedWater <= resources.water &&
+        selected.length * 2 <= resources.energy &&
+        selected.every(item => {
+            const plant = gardenPlants[item.tile];
+            if (!plant) return false;
+            const data = getPlantData(plant.name);
+            return plant.age < data.grow && plant.hydrationDays <= 0 &&
+                plant.wateringCount < data.waterings;
+        });
+    if (!eligible) {
+        pendingWateringPlan = null;
+        document.getElementById("dp-apply-btn").disabled = true;
+        document.getElementById("dp-result").textContent = "The garden or resources changed after the plan was calculated. Please calculate a new plan.";
+        return;
+    }
+
+    saveSnapshot("Apply dynamic-programming watering plan");
+    let watered = 0;
+    for (const item of selected) {
+        const plant = gardenPlants[item.tile];
+        const data = getPlantData(plant.name);
+        resources.water -= data.water;
+        resources.energy -= 2;
+        const coverage = plant.wateringPlan[plant.wateringCount] || 1;
+        plant.wateringCount++;
+        plant.hydrationDays = coverage;
+        plant.watered = true;
+        plant.health = Math.min(100, plant.health + 5);
+        pushAction(`DP plan watered ${plant.name} at Plot ${item.tile + 1}`);
+        syncPythonAction(`DP plan watered ${plant.name} at Plot ${item.tile + 1}`);
+        watered++;
+    }
+
+    renderResources();
+    renderGarden();
+    updateGardenStatus();
+    setGameMessage(`Dynamic Programming plan applied: watered ${watered} crop(s) using ${pendingWateringPlan.waterUsed} L and ${watered * 2} energy.`);
+    document.getElementById("dp-result").textContent = `Applied successfully. ${watered} crop(s) were watered. Water and energy were deducted from your resources.`;
+    pendingWateringPlan = null;
+    document.getElementById("dp-apply-btn").disabled = true;
+    saveGame(false);
+}
+
+function runGardenComplexityBenchmarks() {
+    const output = document.getElementById("complexity-result");
+    const plots = Array.from({ length: 25 }, (_, index) => ({ tile: index + 1 }));
+    const target = 25;
+
+    let linearChecks = 0;
+    for (const plot of plots) {
+        linearChecks++;
+        if (plot.tile === target) break;
+    }
+
+    let binaryChecks = 0;
+    let low = 0, high = plots.length - 1;
+    while (low <= high) {
+        const middle = Math.floor((low + high) / 2);
+        binaryChecks++;
+        if (plots[middle].tile === target) break;
+        if (plots[middle].tile < target) low = middle + 1;
+        else high = middle - 1;
+    }
+
+    const values = plots.map(item => item.tile).reverse();
+    let sortChecks = 0;
+    for (let start = 0; start < values.length; start++) {
+        let smallest = start;
+        for (let index = start + 1; index < values.length; index++) {
+            sortChecks++;
+            if (values[index] < values[smallest]) smallest = index;
+        }
+        [values[start], values[smallest]] = [values[smallest], values[start]];
+    }
+
+    output.innerHTML = `
+        <div class="bg-[#101810] border border-black p-2">Linear Search<br><b class="text-rose-200">${linearChecks} comparisons</b><br><span class="text-emerald-300">O(n)</span> · scans plots in order</div>
+        <div class="bg-[#101810] border border-black p-2">Binary Search<br><b class="text-cyan-200">${binaryChecks} comparisons</b><br><span class="text-emerald-300">O(log n)</span> · halves the sorted range</div>
+        <div class="bg-[#101810] border border-black p-2">Selection Sort<br><b class="text-amber-200">${sortChecks} comparisons</b><br><span class="text-emerald-300">O(n²)</span> · orders all 25 plot numbers</div>
+        <div class="sm:col-span-3 text-emerald-200/75">Garden size: n = 25 plots · Graph traversal: O(V + E), with V = 25 and E = 40 · Dijkstra with a priority queue: O((V + E) log V).</div>
+    `;
+}
+
+function openPythonLesson(topic) {
+    switchTab("code");
+    const select = document.getElementById("topic-selector");
+    if (select) {
+        select.value = String(topic);
+        loadTopic();
+    }
+}
+
+function initializeGardenAlgorithmTools() {
+    document.getElementById("hash-lookup-btn")?.addEventListener("click", lookupGardenHash);
+    document.getElementById("hash-query")?.addEventListener("keydown", event => {
+        if (event.key === "Enter") lookupGardenHash();
+    });
+    document.getElementById("graph-bfs-btn")?.addEventListener("click", () => runGardenGraphTraversal("BFS"));
+    document.getElementById("graph-dfs-btn")?.addEventListener("click", () => runGardenGraphTraversal("DFS"));
+    document.getElementById("sort-run-btn")?.addEventListener("click", runGardenCropSort);
+    document.getElementById("search-linear-btn")?.addEventListener("click", () => searchCropRecords("linear"));
+    document.getElementById("search-binary-btn")?.addEventListener("click", () => searchCropRecords("binary"));
+    document.getElementById("crop-search-query")?.addEventListener("keydown", event => {
+        if (event.key === "Enter") searchCropRecords("linear");
+    });
+    document.getElementById("dijkstra-plan-btn")?.addEventListener("click", planDijkstraHarvestRoute);
+    document.getElementById("dijkstra-dispatch-btn")?.addEventListener("click", dispatchDijkstraHarvest);
+    document.getElementById("dp-plan-btn")?.addEventListener("click", calculateOptimalWateringPlan);
+    document.getElementById("dp-apply-btn")?.addEventListener("click", applyOptimalWateringPlan);
+    document.getElementById("complexity-run-btn")?.addEventListener("click", runGardenComplexityBenchmarks);
+    document.querySelectorAll("[data-python-topic]").forEach(button => {
+        button.addEventListener("click", () => openPythonLesson(button.dataset.pythonTopic));
+    });
+    rebuildGardenHashIndex();
+}
+
+
 function exposeTopicTemplates() {
     // The original file declares `topicTemplates` before this runtime. Make it
     // accessible to the runtime without changing the educational source data.
@@ -3614,6 +4851,7 @@ window.addEventListener("load", () => {
 
     updateClimateQueue(climateEvents);
     initializeMaturityTreeControls();
+    initializeGardenAlgorithmTools();
 renderGarden();
     renderActionStack();
     updateGardenStatus();
